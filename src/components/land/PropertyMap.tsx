@@ -1,0 +1,255 @@
+"use client";
+
+import React, { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { LandProperty } from "@/types/land";
+import { formatMoney, formatAcres, getStatusBadge } from "@/lib/utils";
+import { Layers, MapPin, Maximize2, Sparkles, ArrowRight } from "lucide-react";
+
+interface PropertyMapProps {
+  properties: LandProperty[];
+  selectedPropertyId?: string;
+  onSelectProperty?: (property: LandProperty) => void;
+  className?: string;
+  initialCenter?: [number, number];
+  initialZoom?: number;
+}
+
+export function PropertyMap({
+  properties,
+  selectedPropertyId,
+  onSelectProperty,
+  className = "h-[600px] w-full",
+  initialCenter = [37.0902, -100.7129], // US Centroid
+  initialZoom = 4,
+}: PropertyMapProps) {
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<any>(null);
+  const markersRef = useRef<any[]>([]);
+  const [mapLayer, setMapLayer] = useState<"terrain" | "satellite">("terrain");
+  const [activeProperty, setActiveProperty] = useState<LandProperty | null>(null);
+
+  useEffect(() => {
+    // Dynamic load of Leaflet only in browser
+    if (typeof window === "undefined" || !mapContainerRef.current) return;
+
+    let isMounted = true;
+
+    async function initMap() {
+      const L = (await import("leaflet")).default;
+      // Import Leaflet CSS directly into head if not already loaded
+      if (!document.getElementById("leaflet-css")) {
+        const link = document.createElement("link");
+        link.id = "leaflet-css";
+        link.rel = "stylesheet";
+        link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+        document.head.appendChild(link);
+      }
+
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+      }
+
+      if (!mapContainerRef.current) return;
+
+      const map = L.map(mapContainerRef.current, {
+        center: initialCenter,
+        zoom: initialZoom,
+        zoomControl: true,
+        scrollWheelZoom: false,
+      });
+      mapInstanceRef.current = map;
+
+      // Base tile layer
+      const streetLayer = L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+        {
+          attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
+          maxZoom: 19,
+        }
+      );
+
+      const satelliteLayer = L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        {
+          attribution: "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS",
+          maxZoom: 18,
+        }
+      );
+
+      if (mapLayer === "satellite") {
+        satelliteLayer.addTo(map);
+      } else {
+        streetLayer.addTo(map);
+      }
+
+      // Add custom SVG pins for each property
+      markersRef.current = [];
+      const validProperties = properties.filter(
+        (p) => p.coordinates && p.coordinates.lat && p.coordinates.lng
+      );
+
+      validProperties.forEach((prop) => {
+        const isSelected = prop.id === selectedPropertyId;
+        const iconHtml = `
+          <div class="group relative flex items-center justify-center cursor-pointer transition-transform duration-200 ${
+            isSelected ? "scale-125 z-30" : "hover:scale-110"
+          }">
+            <div class="flex items-center gap-1 bg-brand-ink text-white text-[11px] font-extrabold px-2.5 py-1 rounded-full shadow-card border-2 ${
+              prop.isHotLot ? "border-brand-clay" : "border-white"
+            } whitespace-nowrap">
+              <span>$${prop.defaultPlan.monthlyPayment}/mo</span>
+            </div>
+            <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-brand-ink rotate-45 border-r border-b border-white"></div>
+          </div>
+        `;
+
+        const customIcon = L.divIcon({
+          html: iconHtml,
+          className: "custom-map-pin",
+          iconSize: [80, 30],
+          iconAnchor: [40, 32],
+        });
+
+        const marker = L.marker([prop.coordinates.lat, prop.coordinates.lng], {
+          icon: customIcon,
+        }).addTo(map);
+
+        marker.on("click", () => {
+          setActiveProperty(prop);
+          if (onSelectProperty) onSelectProperty(prop);
+          map.panTo([prop.coordinates.lat, prop.coordinates.lng], { animate: true });
+        });
+
+        markersRef.current.push(marker);
+
+        // If GeoJSON boundary exists, render polygon
+        if (prop.boundaryGeoJson) {
+          const polyCoords = prop.boundaryGeoJson.coordinates[0].map(([lng, lat]) => [
+            lat,
+            lng,
+          ]);
+          L.polygon(polyCoords as any, {
+            color: "#2F6B4F",
+            fillColor: "#2F6B4F",
+            fillOpacity: 0.25,
+            weight: 2,
+            dashArray: "4, 4",
+          }).addTo(map);
+        }
+      });
+
+      // Fit bounds if multiple properties exist
+      if (validProperties.length > 0) {
+        const bounds = L.latLngBounds(
+          validProperties.map((p) => [p.coordinates.lat, p.coordinates.lng])
+        );
+        map.fitBounds(bounds, { padding: [50, 50], maxZoom: 12 });
+      }
+    }
+
+    initMap();
+
+    return () => {
+      isMounted = false;
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
+  }, [properties, mapLayer, selectedPropertyId]);
+
+  return (
+    <div className={`relative rounded-card overflow-hidden border border-brand-border shadow-soft bg-slate-100 ${className}`}>
+      {/* Map Container */}
+      <div ref={mapContainerRef} className="w-full h-full" />
+
+      {/* Layer Switcher Button */}
+      <div className="absolute top-4 right-4 z-[400] flex items-center bg-white/90 backdrop-blur-md rounded-xl p-1 shadow-card border border-brand-border">
+        <button
+          onClick={() => setMapLayer("terrain")}
+          className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-colors ${
+            mapLayer === "terrain"
+              ? "bg-brand-ink text-white shadow-sm"
+              : "text-slate-600 hover:text-brand-ink"
+          }`}
+        >
+          Street / Map
+        </button>
+        <button
+          onClick={() => setMapLayer("satellite")}
+          className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-colors ${
+            mapLayer === "satellite"
+              ? "bg-brand-ink text-white shadow-sm"
+              : "text-slate-600 hover:text-brand-ink"
+          }`}
+        >
+          Satellite Aerial
+        </button>
+      </div>
+
+      {/* Active Selected Property Card Overlay */}
+      {activeProperty && (
+        <div className="absolute bottom-4 left-4 right-4 sm:right-auto sm:w-96 z-[400] bg-white rounded-2xl shadow-2xl border border-brand-border p-4 animate-in slide-in-from-bottom-3 duration-200">
+          <div className="flex gap-3">
+            <div className="relative w-24 h-24 rounded-xl overflow-hidden shrink-0 border border-brand-border">
+              <Image
+                src={activeProperty.primaryImage}
+                alt={activeProperty.title}
+                fill
+                className="object-cover"
+              />
+              {activeProperty.panorama && (
+                <span className="absolute top-1 left-1 bg-black/70 text-white text-[9px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                  <Sparkles className="w-2.5 h-2.5 text-amber-300" />
+                  360°
+                </span>
+              )}
+            </div>
+
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-bold text-brand-blue uppercase truncate">
+                  {activeProperty.county}, {activeProperty.stateCode}
+                </span>
+                <button
+                  onClick={() => setActiveProperty(null)}
+                  className="text-slate-400 hover:text-brand-ink text-xs font-bold px-1"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <h4 className="font-bold text-sm text-brand-ink truncate">
+                {activeProperty.displayTitle}
+              </h4>
+              <p className="text-xs text-brand-muted">
+                {formatAcres(activeProperty.acres)} • APN: {activeProperty.apn}
+              </p>
+
+              <div className="mt-2 flex items-center justify-between">
+                <div>
+                  <span className="text-xs font-extrabold text-brand-forest">
+                    {formatMoney(activeProperty.defaultPlan.monthlyPayment)}/mo
+                  </span>
+                  <span className="text-[10px] text-slate-500 block">
+                    Cash: {formatMoney(activeProperty.cashPrice)}
+                  </span>
+                </div>
+
+                <Link
+                  href={`/products/${activeProperty.handle}`}
+                  className="inline-flex items-center gap-1 bg-brand-ink hover:bg-brand-forest text-white text-xs font-semibold py-1.5 px-3 rounded-lg transition-colors"
+                >
+                  <span>Details</span>
+                  <ArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

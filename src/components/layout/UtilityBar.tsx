@@ -1,0 +1,58 @@
+import React from "react";
+import Link from "next/link";
+import { Phone, ShieldCheck, CreditCard, User, Clock } from "lucide-react";
+
+export function UtilityBar() {
+  return (
+    <div className="bg-brand-ink text-white/90 text-xs py-2 px-4 border-b border-white/10 hidden md:block">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
+        {/* Left trust signal & phone */}
+        <div className="flex items-center gap-6">
+          <a
+            href="tel:18005555263"
+            className="flex items-center gap-2 hover:text-brand-blue-light transition-colors font-medium"
+          >
+            <Phone className="w-3.5 h-3.5 text-brand-blue" />
+            <span>Call / Text: (800) 555-LAND</span>
+          </a>
+          <div className="flex items-center gap-1.5 text-slate-400">
+            <Clock className="w-3.5 h-3.5" />
+            <span>Mon–Fri 8am–6pm MST</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-emerald-400 font-medium">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <span>90-Day 100% Satisfaction Guarantee</span>
+          </div>
+        </div>
+
+        {/* Right action links */}
+        <div className="flex items-center gap-5">
+          <Link
+            href="/make-a-payment"
+            className="flex items-center gap-1.5 hover:text-white transition-colors text-slate-300"
+          >
+            <CreditCard className="w-3.5 h-3.5 text-brand-blue" />
+            <span>Make a Payment</span>
+          </Link>
+          <span className="text-white/20">|</span>
+          <Link
+            href="/contact"
+            className="hover:text-white transition-colors text-slate-300"
+          >
+            Need Help?
+          </Link>
+          <span className="text-white/20">|</span>
+          <a
+            href="https://onlinelandsales.com/account"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 hover:text-white transition-colors text-slate-300"
+          >
+            <User className="w-3.5 h-3.5 text-slate-400" />
+            <span>Buyer Portal</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
