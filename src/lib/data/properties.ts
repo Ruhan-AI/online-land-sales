@@ -126,7 +126,7 @@ export const PROPERTIES: LandProperty[] = [
     panorama: {
       id: "pano-az-01",
       label: "360° Parcel Center Viewpoint",
-      panoramaUrl: "https://photo-sphere-viewer.js.org/assets/sphere.jpg",
+      panoramaUrl: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=3840&q=85",
       posterImage: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=1200&q=80",
       initialYaw: 0.2,
       initialPitch: 0.05,
@@ -333,7 +333,7 @@ export const PROPERTIES: LandProperty[] = [
     panorama: {
       id: "pano-co-02",
       label: "360° Alpine Valley Panorama",
-      panoramaUrl: "https://photo-sphere-viewer.js.org/assets/sphere.jpg",
+      panoramaUrl: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=3840&q=85",
       posterImage: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80",
       initialYaw: 1.0,
       initialPitch: 0.1,
@@ -498,6 +498,37 @@ export const PROPERTIES: LandProperty[] = [
       "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1542314831-c6a4d2729a99?auto=format&fit=crop&w=1200&q=80",
     ],
+
+    panorama: {
+      id: "pano-tx-03",
+      label: "360° West Texas Frontier Viewpoint",
+      panoramaUrl: "https://images.unsplash.com/photo-1542314831-c6a4d2729a99?auto=format&fit=crop&w=3840&q=85",
+      posterImage: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80",
+      initialYaw: 0.5,
+      initialPitch: 0.05,
+      northOffset: 90,
+      capturedAt: "2026-06-15",
+      weatherNote: "Clear dry afternoon, 10-mile horizon visibility.",
+      altDescription: "Equirectangular view of vast Presidio County desert flats with rugged Chinati Mountain silhouettes.",
+      hotspots: [
+        {
+          id: "hs-tx-1",
+          label: "Chinati Peak Horizon",
+          type: "mountain_view",
+          yaw: 0.8,
+          pitch: 0.1,
+          description: "Distinct mountain peak commanding the southwest horizon.",
+        },
+        {
+          id: "hs-tx-2",
+          label: "County Trail Access Road",
+          type: "access_road",
+          yaw: -1.5,
+          pitch: -0.2,
+          description: "Maintained dirt access path along northern boundary.",
+        },
+      ],
+    },
 
     documents: [
       {

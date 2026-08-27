@@ -10,9 +10,16 @@ import {
   RotateCcw,
   Sparkles,
   Info,
-  Smartphone,
   Eye,
   MapPin,
+  Play,
+  Pause,
+  ZoomIn,
+  ZoomOut,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  ChevronDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
@@ -21,181 +28,83 @@ interface PanoramaViewerProps {
   className?: string;
 }
 
-export function PanoramaViewer({ panorama, className = "w-full h-[520px]" }: PanoramaViewerProps) {
+export function PanoramaViewer({
+  panorama,
+  className = "w-full h-[520px]",
+}: PanoramaViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [isStarted, setIsStarted] = useState(false);
+  const [isStarted, setIsStarted] = useState(true); // Auto-active for immediate viewing
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [activeHotspot, setActiveHotspot] = useState<LandHotspot | null>(null);
-  const [isGyroEnabled, setIsGyroEnabled] = useState(false);
-  const [compassHeading, setCompassHeading] = useState(0);
+  const [isAutoRotating, setIsAutoRotating] = useState(true);
+  const [isDragging, setIsDragging] = useState(false);
 
-  // Panorama navigation internal state
-  const isDraggingRef = useRef(false);
-  const previousMousePositionRef = useRef({ x: 0, y: 0 });
-  const yawRef = useRef(panorama.initialYaw || 0);
-  const pitchRef = useRef(panorama.initialPitch || 0);
-  const fovRef = useRef(75);
-  const animationFrameIdRef = useRef<number | null>(null);
-  const textureImageRef = useRef<HTMLImageElement | null>(null);
+  // Panorama navigation states
+  const [yaw, setYaw] = useState(panorama.initialYaw ? (panorama.initialYaw * 180) / Math.PI : 0);
+  const [pitch, setPitch] = useState(panorama.initialPitch ? (panorama.initialPitch * 180) / Math.PI : 0);
+  const [zoom, setZoom] = useState(1); // 1 to 2.5x
 
-  const startViewer = () => {
-    setIsStarted(true);
-  };
+  const dragStartRef = useRef<{ x: number; y: number; yaw: number; pitch: number }>({
+    x: 0,
+    y: 0,
+    yaw: 0,
+    pitch: 0,
+  });
 
-  // Canvas Equirectangular Projection Renderer
+  // Auto-rotate effect
   useEffect(() => {
-    if (!isStarted || !canvasRef.current) return;
+    if (!isAutoRotating || isDragging) return;
 
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const interval = setInterval(() => {
+      setYaw((prev) => (prev + 0.15) % 360);
+    }, 30);
 
-    const img = new window.Image();
-    img.crossOrigin = "anonymous";
-    img.src = panorama.panoramaUrl;
-    textureImageRef.current = img;
+    return () => clearInterval(interval);
+  }, [isAutoRotating, isDragging]);
 
-    const render = () => {
-      if (!canvas || !ctx || !img.complete || img.naturalWidth === 0) {
-        animationFrameIdRef.current = requestAnimationFrame(render);
-        return;
-      }
-
-      const width = canvas.width;
-      const height = canvas.height;
-      ctx.clearRect(0, 0, width, height);
-
-      // Simple, robust 2D equirectangular panorama viewport projection
-      const imgW = img.naturalWidth;
-      const imgH = img.naturalHeight;
-
-      // Map yaw to horizontal pixel offset (0 to imgW)
-      let normalizedYaw = ((yawRef.current % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
-      const xOffset = (normalizedYaw / (Math.PI * 2)) * imgW;
-      const yOffset = Math.max(0, Math.min(imgH - height, (imgH / 2) - (pitchRef.current * 300)));
-
-      // Draw wrapped image slices
-      const sliceW = (fovRef.current / 360) * imgW;
-      const aspect = width / height;
-      const sliceH = sliceW / aspect;
-
-      ctx.drawImage(
-        img,
-        xOffset,
-        imgH / 2 - sliceH / 2 + pitchRef.current * 100,
-        Math.min(imgW - xOffset, sliceW),
-        sliceH,
-        0,
-        0,
-        (Math.min(imgW - xOffset, sliceW) / sliceW) * width,
-        height
-      );
-
-      // Handle wraparound
-      if (xOffset + sliceW > imgW) {
-        const remainingW = xOffset + sliceW - imgW;
-        ctx.drawImage(
-          img,
-          0,
-          imgH / 2 - sliceH / 2 + pitchRef.current * 100,
-          remainingW,
-          sliceH,
-          ((imgW - xOffset) / sliceW) * width,
-          0,
-          (remainingW / sliceW) * width,
-          height
-        );
-      }
-
-      // Update compass
-      const headingDeg = Math.round(((normalizedYaw * 180) / Math.PI + (panorama.northOffset || 0)) % 360);
-      setCompassHeading(headingDeg);
-
-      animationFrameIdRef.current = requestAnimationFrame(render);
+  // Pointer Drag Handlers
+  const handlePointerDown = (e: React.PointerEvent) => {
+    setIsDragging(true);
+    setIsAutoRotating(false);
+    dragStartRef.current = {
+      x: e.clientX,
+      y: e.clientY,
+      yaw,
+      pitch,
     };
-
-    img.onload = () => {
-      render();
-    };
-
-    // Resize canvas to element dimensions
-    const resizeObserver = new ResizeObserver(() => {
-      if (canvas && containerRef.current) {
-        canvas.width = containerRef.current.clientWidth;
-        canvas.height = containerRef.current.clientHeight;
-      }
-    });
-
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
-      canvas.width = containerRef.current.clientWidth;
-      canvas.height = containerRef.current.clientHeight;
-    }
-
-    return () => {
-      if (animationFrameIdRef.current) {
-        cancelAnimationFrame(animationFrameIdRef.current);
-      }
-      resizeObserver.disconnect();
-    };
-  }, [isStarted, panorama]);
-
-  // Pointer drag controls
-  const handleMouseDown = (e: React.MouseEvent) => {
-    isDraggingRef.current = true;
-    previousMousePositionRef.current = { x: e.clientX, y: e.clientY };
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDraggingRef.current) return;
-    const deltaX = e.clientX - previousMousePositionRef.current.x;
-    const deltaY = e.clientY - previousMousePositionRef.current.y;
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!isDragging) return;
+    const deltaX = e.clientX - dragStartRef.current.x;
+    const deltaY = e.clientY - dragStartRef.current.y;
 
-    yawRef.current += deltaX * 0.003;
-    pitchRef.current = Math.max(-0.8, Math.min(0.8, pitchRef.current + deltaY * 0.002));
+    const sensitivity = 0.25 / zoom;
+    const newYaw = (dragStartRef.current.yaw - deltaX * sensitivity) % 360;
+    const newPitch = Math.max(-40, Math.min(40, dragStartRef.current.pitch + deltaY * sensitivity));
 
-    previousMousePositionRef.current = { x: e.clientX, y: e.clientY };
+    setYaw(newYaw < 0 ? newYaw + 360 : newYaw);
+    setPitch(newPitch);
   };
 
-  const handleMouseUp = () => {
-    isDraggingRef.current = false;
+  const handlePointerUp = (e: React.PointerEvent) => {
+    setIsDragging(false);
+    try {
+      (e.target as HTMLElement).releasePointerCapture(e.pointerId);
+    } catch {}
   };
 
   const handleWheel = (e: React.WheelEvent) => {
     e.preventDefault();
-    fovRef.current = Math.max(45, Math.min(100, fovRef.current + e.deltaY * 0.05));
-  };
-
-  // Touch controls for mobile
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (e.touches.length === 1) {
-      isDraggingRef.current = true;
-      previousMousePositionRef.current = {
-        x: e.touches[0].clientX,
-        y: e.touches[0].clientY,
-      };
-    }
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDraggingRef.current || e.touches.length !== 1) return;
-    const deltaX = e.touches[0].clientX - previousMousePositionRef.current.x;
-    const deltaY = e.touches[0].clientY - previousMousePositionRef.current.y;
-
-    yawRef.current += deltaX * 0.004;
-    pitchRef.current = Math.max(-0.8, Math.min(0.8, pitchRef.current + deltaY * 0.003));
-
-    previousMousePositionRef.current = {
-      x: e.touches[0].clientX,
-      y: e.touches[0].clientY,
-    };
+    setZoom((prev) => Math.max(0.8, Math.min(2.5, prev - e.deltaY * 0.0015)));
   };
 
   const resetView = () => {
-    yawRef.current = panorama.initialYaw || 0;
-    pitchRef.current = panorama.initialPitch || 0;
-    fovRef.current = 75;
+    setYaw(panorama.initialYaw ? (panorama.initialYaw * 180) / Math.PI : 0);
+    setPitch(panorama.initialPitch ? (panorama.initialPitch * 180) / Math.PI : 0);
+    setZoom(1);
+    setIsAutoRotating(true);
   };
 
   const toggleFullscreen = () => {
@@ -209,145 +118,195 @@ export function PanoramaViewer({ panorama, className = "w-full h-[520px]" }: Pan
     }
   };
 
+  const compassHeading = Math.round((yaw + (panorama.northOffset || 0)) % 360);
+
+  // Background position for 360 wrap
+  const backgroundPositionX = `${(yaw / 360) * 100}%`;
+  const backgroundPositionY = `${50 - pitch * 0.8}%`;
+
+  const bgImage = panorama.panoramaUrl || panorama.posterImage;
+
   return (
     <div
       ref={containerRef}
-      className={`relative rounded-2xl overflow-hidden bg-slate-950 border border-brand-border select-none ${className}`}
+      className={`relative rounded-3xl overflow-hidden bg-slate-950 border border-brand-border select-none shadow-2xl ${className}`}
     >
-      {!isStarted ? (
-        // Initial Poster & CTA State
-        <div className="relative w-full h-full flex items-center justify-center">
-          <Image
-            src={panorama.posterImage}
-            alt={panorama.altDescription}
-            fill
-            className="object-cover brightness-75"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/40" />
-
-          <div className="relative z-10 text-center p-6 max-w-lg space-y-4 animate-in fade-in zoom-in-95 duration-300">
-            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md text-white border border-white/30 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
-              <Sparkles className="w-4 h-4 text-amber-300" />
-              <span>Interactive 360° Land Inspection</span>
-            </div>
-
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-              {panorama.label}
-            </h3>
-
-            <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
-              Explore the parcel in full 360 degrees. Rotate the camera, inspect mountain horizons, identify road access points, and verify survey pins.
-            </p>
-
-            <Button
-              variant="forest"
-              size="lg"
-              onClick={startViewer}
-              className="shadow-xl"
-              icon={<Eye className="w-5 h-5" />}
-            >
-              Enter 360° Virtual Tour
-            </Button>
-
-            {panorama.weatherNote && (
-              <p className="text-[11px] text-slate-300 font-medium">
-                Captured: {panorama.capturedAt} • {panorama.weatherNote}
-              </p>
-            )}
-          </div>
-        </div>
-      ) : (
-        // Active 360 Viewport
+      {/* 360 Viewport Container */}
+      <div
+        className="relative w-full h-full cursor-grab active:cursor-grabbing overflow-hidden"
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+        onWheel={handleWheel}
+      >
+        {/* Seamless 360 Panorama Panoramic Image Background */}
         <div
-          className="relative w-full h-full cursor-grab active:cursor-grabbing"
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
-          onWheel={handleWheel}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleMouseUp}
-        >
-          <canvas ref={canvasRef} className="w-full h-full" />
+          className="absolute inset-0 w-full h-full transition-transform duration-75"
+          style={{
+            backgroundImage: `url(${bgImage})`,
+            backgroundSize: `${350 * zoom}% auto`,
+            backgroundPosition: `${backgroundPositionX} ${backgroundPositionY}`,
+            backgroundRepeat: "repeat-x",
+            filter: "brightness(0.95) contrast(1.05)",
+            transform: `scale(${zoom})`,
+          }}
+        />
 
-          {/* Top Compass & Info Bar */}
-          <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
-            <div className="flex items-center gap-2 bg-brand-ink/80 backdrop-blur-md border border-white/20 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow-lg">
-              <Compass
-                className="w-4 h-4 text-brand-blue"
-                style={{ transform: `rotate(${compassHeading}deg)` }}
-              />
-              <span>{compassHeading}° {getCompassDirection(compassHeading)}</span>
-            </div>
+        {/* Ambient Vignette & Sky/Ground Gradients */}
+        <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/60 via-transparent to-black/30" />
 
-            <div className="hidden sm:flex items-center gap-1.5 bg-black/60 backdrop-blur-md text-white text-[11px] font-medium px-3 py-1.5 rounded-xl border border-white/10">
-              <Info className="w-3.5 h-3.5 text-amber-300" />
-              <span>Drag or swipe to rotate</span>
-            </div>
-          </div>
+        {/* Floating Hotspots in Viewport */}
+        {panorama.hotspots && panorama.hotspots.length > 0 && (
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            {panorama.hotspots.map((hs) => {
+              const hsDeg = (hs.yaw * 180) / Math.PI;
+              let diff = hsDeg - yaw;
+              while (diff < -180) diff += 360;
+              while (diff > 180) diff -= 360;
 
-          {/* Top Right Actions */}
-          <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
-            <button
-              onClick={resetView}
-              className="p-2 rounded-xl bg-brand-ink/80 hover:bg-brand-ink text-white border border-white/20 backdrop-blur-md transition-colors"
-              title="Reset View"
-            >
-              <RotateCcw className="w-4 h-4" />
-            </button>
+              // Visible if within ~60 degrees of FOV
+              const isVisible = Math.abs(diff) < 55;
+              if (!isVisible) return null;
 
-            <button
-              onClick={toggleFullscreen}
-              className="p-2 rounded-xl bg-brand-ink/80 hover:bg-brand-ink text-white border border-white/20 backdrop-blur-md transition-colors"
-              title="Toggle Fullscreen"
-            >
-              {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
-            </button>
-          </div>
+              const screenXPercent = 50 + (diff / 55) * 45;
+              const hsPitchDeg = (hs.pitch * 180) / Math.PI;
+              const screenYPercent = 50 - (hsPitchDeg - pitch) * 1.2;
 
-          {/* Hotspot Pills */}
-          {panorama.hotspots && panorama.hotspots.length > 0 && (
-            <div className="absolute bottom-4 left-4 right-4 z-20 flex flex-wrap gap-2 justify-center pointer-events-none">
-              {panorama.hotspots.map((hs) => (
-                <button
+              return (
+                <div
                   key={hs.id}
-                  onClick={() => {
-                    yawRef.current = hs.yaw;
-                    pitchRef.current = hs.pitch;
-                    setActiveHotspot(hs);
+                  style={{
+                    left: `${screenXPercent}%`,
+                    top: `${screenYPercent}%`,
+                    transform: "translate(-50%, -50%)",
                   }}
-                  className="pointer-events-auto flex items-center gap-1.5 bg-brand-ink/90 hover:bg-brand-forest text-white text-xs font-semibold px-3 py-1.5 rounded-xl border border-white/20 backdrop-blur-md shadow-lg transition-colors"
+                  className="absolute pointer-events-auto z-20"
                 >
-                  <MapPin className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>{hs.label}</span>
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Active Hotspot Modal Card */}
-          {activeHotspot && (
-            <div className="absolute top-16 left-4 right-4 sm:right-auto sm:w-80 z-30 bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-brand-border animate-in fade-in duration-150">
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-2 text-xs font-bold text-brand-forest uppercase">
-                  <MapPin className="w-4 h-4" />
-                  <span>{activeHotspot.label}</span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveHotspot(hs);
+                      setIsAutoRotating(false);
+                    }}
+                    className="group flex items-center gap-1.5 bg-brand-ink/90 hover:bg-brand-forest text-white text-[11px] font-bold px-3 py-1.5 rounded-full border border-white/30 backdrop-blur-md shadow-2xl transition-all hover:scale-110 animate-bounce"
+                  >
+                    <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>{hs.label}</span>
+                  </button>
                 </div>
-                <button
-                  onClick={() => setActiveHotspot(null)}
-                  className="text-slate-400 hover:text-brand-ink text-xs font-bold px-1"
-                >
-                  ✕
-                </button>
-              </div>
-              <p className="text-xs text-slate-700 mt-2 leading-relaxed">
-                {activeHotspot.description || "Point of interest documented during ground survey."}
-              </p>
-            </div>
-          )}
+              );
+            })}
+          </div>
+        )}
+
+        {/* Top Bar: Compass & Status */}
+        <div className="absolute top-4 left-4 z-30 flex items-center gap-2 pointer-events-none">
+          <div className="flex items-center gap-2 bg-brand-ink/85 backdrop-blur-md border border-white/20 text-white text-xs font-bold px-3.5 py-2 rounded-2xl shadow-xl">
+            <Compass
+              className="w-4 h-4 text-brand-blue transition-transform duration-75"
+              style={{ transform: `rotate(${compassHeading}deg)` }}
+            />
+            <span>
+              {compassHeading}° {getCompassDirection(compassHeading)}
+            </span>
+          </div>
+
+          <div className="hidden sm:flex items-center gap-1.5 bg-black/60 backdrop-blur-md text-white text-[11px] font-medium px-3 py-2 rounded-2xl border border-white/10">
+            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+            <span>Interactive 360° View</span>
+          </div>
         </div>
-      )}
+
+        {/* Top Right Controls */}
+        <div className="absolute top-4 right-4 z-30 flex items-center gap-1.5">
+          <button
+            onClick={() => setIsAutoRotating(!isAutoRotating)}
+            className="p-2.5 rounded-xl bg-brand-ink/80 hover:bg-brand-ink text-white border border-white/20 backdrop-blur-md shadow-lg transition-colors"
+            title={isAutoRotating ? "Pause auto-rotation" : "Play auto-rotation"}
+          >
+            {isAutoRotating ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+          </button>
+
+          <button
+            onClick={resetView}
+            className="p-2.5 rounded-xl bg-brand-ink/80 hover:bg-brand-ink text-white border border-white/20 backdrop-blur-md shadow-lg transition-colors"
+            title="Reset View"
+          >
+            <RotateCcw className="w-4 h-4" />
+          </button>
+
+          <button
+            onClick={toggleFullscreen}
+            className="p-2.5 rounded-xl bg-brand-ink/80 hover:bg-brand-ink text-white border border-white/20 backdrop-blur-md shadow-lg transition-colors"
+            title="Toggle Fullscreen"
+          >
+            {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+          </button>
+        </div>
+
+        {/* Right Side Zoom Controls */}
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-1.5">
+          <button
+            onClick={() => setZoom((prev) => Math.min(2.5, prev + 0.25))}
+            className="p-2.5 rounded-xl bg-brand-ink/80 hover:bg-brand-ink text-white border border-white/20 backdrop-blur-md shadow-lg transition-colors"
+            title="Zoom in"
+          >
+            <ZoomIn className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => setZoom((prev) => Math.max(0.8, prev - 0.25))}
+            className="p-2.5 rounded-xl bg-brand-ink/80 hover:bg-brand-ink text-white border border-white/20 backdrop-blur-md shadow-lg transition-colors"
+            title="Zoom out"
+          >
+            <ZoomOut className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Bottom Hotspots Tray */}
+        {panorama.hotspots && panorama.hotspots.length > 0 && (
+          <div className="absolute bottom-4 left-4 right-4 z-30 flex flex-wrap gap-2 justify-center">
+            {panorama.hotspots.map((hs) => (
+              <button
+                key={hs.id}
+                onClick={() => {
+                  const targetYaw = ((hs.yaw * 180) / Math.PI + 360) % 360;
+                  setYaw(targetYaw);
+                  setPitch((hs.pitch * 180) / Math.PI);
+                  setActiveHotspot(hs);
+                  setIsAutoRotating(false);
+                }}
+                className="flex items-center gap-1.5 bg-brand-ink/90 hover:bg-brand-forest text-white text-xs font-semibold px-3.5 py-1.5 rounded-full border border-white/20 backdrop-blur-md shadow-xl transition-all hover:scale-105"
+              >
+                <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+                <span>{hs.label}</span>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Active Hotspot Modal Card */}
+        {activeHotspot && (
+          <div className="absolute top-16 left-4 right-4 sm:right-auto sm:w-80 z-40 bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-brand-border animate-in fade-in duration-150">
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-2 text-xs font-bold text-brand-forest uppercase">
+                <MapPin className="w-4 h-4" />
+                <span>{activeHotspot.label}</span>
+              </div>
+              <button
+                onClick={() => setActiveHotspot(null)}
+                className="text-slate-400 hover:text-brand-ink text-xs font-bold px-1"
+              >
+                ✕
+              </button>
+            </div>
+            <p className="text-xs text-slate-700 mt-2 leading-relaxed">
+              {activeHotspot.description ||
+                "Point of interest documented during official ground survey."}
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
