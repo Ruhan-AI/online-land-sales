@@ -4,7 +4,6 @@ import { TrustRail } from "@/components/home/TrustRail";
 import { HotLots } from "@/components/home/HotLots";
 import { MapDiscoveryPreview } from "@/components/home/MapDiscoveryPreview";
 import { HowItWorksSection } from "@/components/home/HowItWorksSection";
-import { PanoramaTeaser } from "@/components/home/PanoramaTeaser";
 import { GoalGrid } from "@/components/home/GoalGrid";
 import { FinanceCalculatorSection } from "@/components/home/FinanceCalculatorSection";
 import { Testimonials } from "@/components/home/Testimonials";
@@ -28,10 +27,7 @@ export default function HomePage() {
       {/* 5. How Buying Works */}
       <HowItWorksSection />
 
-      {/* 6. Immersive 360° Land Tour Showcase */}
-      <PanoramaTeaser />
-
-      {/* 7. Shop by Goal */}
+      {/* 6. Shop by Goal */}
       <GoalGrid />
 
       {/* 8. Budget-First Financing Calculator */}
