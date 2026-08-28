@@ -32,7 +32,7 @@ export function MapDiscoveryPreview() {
         </div>
 
         {/* Map Embed */}
-        <div className="h-[520px] rounded-3xl overflow-hidden shadow-card border border-brand-border">
+        <div className="h-[380px] sm:h-[520px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-card border border-brand-border">
           <PropertyMap properties={PROPERTIES} className="h-full w-full" />
         </div>
       </div>

@@ -93,7 +93,7 @@ export function FinanceCalculatorSection() {
                 <span>Loan Term</span>
                 <span className="text-base text-brand-ink font-extrabold">{termMonths} Months ({Math.round(termMonths / 12)} Yrs)</span>
               </div>
-              <div className="grid grid-cols-4 gap-2 text-xs font-bold">
+              <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 text-xs font-bold">
                 {[24, 36, 48, 60, 72].map((m) => (
                   <button
                     key={m}

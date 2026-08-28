@@ -10,6 +10,7 @@ import { BoundaryMap } from "@/components/land/BoundaryMap";
 import { PropertyCard } from "@/components/land/PropertyCard";
 import { ShareButton } from "@/components/land/ShareButton";
 import { Accordion } from "@/components/ui/Accordion";
+import { MobileStickyReserveBar } from "@/components/land/MobileStickyReserveBar";
 import { generateProductSchema, generateBreadcrumbSchema } from "@/lib/seo";
 import { formatMoney, formatAcres, getStatusBadge } from "@/lib/utils";
 import {
@@ -230,24 +231,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       </div>
 
       {/* Mobile Sticky Bottom Reserve Bar */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-brand-border p-4 shadow-float flex items-center justify-between gap-4">
-        <div>
-          <span className="text-[10px] text-slate-500 uppercase font-bold block">
-            Guaranteed Monthly
-          </span>
-          <span className="text-lg font-extrabold text-brand-forest">
-            {formatMoney(property.defaultPlan.monthlyPayment)}
-            <span className="text-xs font-normal text-slate-600">/mo</span>
-          </span>
-        </div>
-
-        <Link
-          href={`/products/${property.handle}`}
-          className="flex-1 inline-flex items-center justify-center gap-1.5 bg-brand-forest text-white font-extrabold text-xs py-3 px-4 rounded-xl shadow-md active:scale-95 transition-transform"
-        >
-          <span>Reserve Now ({formatMoney(property.defaultPlan.amountDueToday)})</span>
-        </Link>
-      </div>
+      <MobileStickyReserveBar property={property} />
     </div>
   );
 }

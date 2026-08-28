@@ -58,9 +58,9 @@ export function Footer() {
         </div>
 
         {/* Middle Navigation Columns */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 py-12 border-b border-white/10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8 py-12 border-b border-white/10">
           {/* Brand & Contact */}
-          <div className="col-span-2 space-y-4">
+          <div className="sm:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-lg bg-brand-forest flex items-center justify-center text-white">
                 <Compass className="w-5 h-5" />
