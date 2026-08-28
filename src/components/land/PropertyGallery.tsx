@@ -19,44 +19,46 @@ export function PropertyGallery({ property }: PropertyGalleryProps) {
 
   return (
     <div className="space-y-4">
-      {/* Media Tabs Header */}
-      <div className="flex items-center gap-2 p-1.5 bg-brand-sand rounded-2xl border border-brand-border text-xs font-bold w-fit">
+      {/* Media Tabs Header — scrolls sideways instead of overflowing on phones */}
+      <div className="flex items-center gap-1.5 sm:gap-2 p-1.5 bg-brand-sand rounded-2xl border border-brand-border text-xs font-bold w-full lg:w-fit overflow-x-auto no-scrollbar touch-rail">
         <button
           onClick={() => setActiveTab("photos")}
-          className={`flex items-center gap-1.5 py-2 px-4 rounded-xl transition-all ${
+          className={`flex shrink-0 items-center gap-1.5 py-2.5 px-3 sm:px-4 rounded-xl transition-all whitespace-nowrap ${
             activeTab === "photos"
               ? "bg-brand-ink text-white shadow-sm font-extrabold"
               : "text-slate-700 hover:text-brand-ink"
           }`}
         >
-          <Camera className="w-4 h-4" />
+          <Camera className="w-4 h-4 shrink-0" />
           <span>Photos ({images.length})</span>
         </button>
 
         {property.panorama && (
           <button
             onClick={() => setActiveTab("360")}
-            className={`flex items-center gap-1.5 py-2 px-4 rounded-xl transition-all ${
+            className={`flex shrink-0 items-center gap-1.5 py-2.5 px-3 sm:px-4 rounded-xl transition-all whitespace-nowrap ${
               activeTab === "360"
                 ? "bg-brand-forest text-white shadow-sm font-extrabold"
                 : "text-slate-700 hover:text-brand-forest"
             }`}
           >
-            <Sparkles className="w-4 h-4 text-amber-300" />
-            <span>360° Virtual Tour</span>
+            <Sparkles className="w-4 h-4 text-amber-300 shrink-0" />
+            <span className="sm:hidden">360° Tour</span>
+            <span className="hidden sm:inline">360° Virtual Tour</span>
           </button>
         )}
 
         <button
           onClick={() => setActiveTab("map")}
-          className={`flex items-center gap-1.5 py-2 px-4 rounded-xl transition-all ${
+          className={`flex shrink-0 items-center gap-1.5 py-2.5 px-3 sm:px-4 rounded-xl transition-all whitespace-nowrap ${
             activeTab === "map"
               ? "bg-brand-blue text-white shadow-sm font-extrabold"
               : "text-slate-700 hover:text-brand-blue"
           }`}
         >
-          <MapPin className="w-4 h-4" />
-          <span>Parcel & Aerial Map</span>
+          <MapPin className="w-4 h-4 shrink-0" />
+          <span className="sm:hidden">Map</span>
+          <span className="hidden sm:inline">Parcel &amp; Aerial Map</span>
         </button>
       </div>
 
@@ -83,7 +85,7 @@ export function PropertyGallery({ property }: PropertyGalleryProps) {
                       (selectedPhotoIndex - 1 + images.length) % images.length
                     )
                   }
-                  className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white hover:bg-black/80 transition-colors backdrop-blur-sm"
+                  className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-11 h-11 rounded-full bg-black/50 text-white hover:bg-black/80 active:bg-black/80 transition-colors backdrop-blur-sm"
                   aria-label="Previous photo"
                 >
                   <ChevronLeft className="w-5 h-5" />
@@ -92,7 +94,7 @@ export function PropertyGallery({ property }: PropertyGalleryProps) {
                   onClick={() =>
                     setSelectedPhotoIndex((selectedPhotoIndex + 1) % images.length)
                   }
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/50 text-white hover:bg-black/80 transition-colors backdrop-blur-sm"
+                  className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-11 h-11 rounded-full bg-black/50 text-white hover:bg-black/80 active:bg-black/80 transition-colors backdrop-blur-sm"
                   aria-label="Next photo"
                 >
                   <ChevronRight className="w-5 h-5" />
@@ -108,12 +110,13 @@ export function PropertyGallery({ property }: PropertyGalleryProps) {
 
           {/* Thumbnails Row */}
           {images.length > 1 && (
-            <div className="flex gap-2 overflow-x-auto pb-2">
+            <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar touch-rail">
               {images.map((img, index) => (
                 <button
                   key={index}
                   onClick={() => setSelectedPhotoIndex(index)}
-                  className={`relative w-24 h-16 rounded-xl overflow-hidden border-2 shrink-0 transition-all ${
+                  aria-label={`View photo ${index + 1}`}
+                  className={`relative w-20 h-14 sm:w-24 sm:h-16 rounded-xl overflow-hidden border-2 shrink-0 transition-all ${
                     selectedPhotoIndex === index
                       ? "border-brand-forest scale-95 shadow-md"
                       : "border-transparent opacity-70 hover:opacity-100"
@@ -133,7 +136,10 @@ export function PropertyGallery({ property }: PropertyGalleryProps) {
       )}
 
       {activeTab === "360" && property.panorama && (
-        <PanoramaViewer panorama={property.panorama} className="w-full h-[520px]" />
+        <PanoramaViewer
+          panorama={property.panorama}
+          className="w-full h-[300px] sm:h-[420px] lg:h-[520px]"
+        />
       )}
 
       {activeTab === "map" && <BoundaryMap property={property} />}

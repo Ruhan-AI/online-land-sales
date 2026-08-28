@@ -6,14 +6,14 @@ import { Button } from "@/components/ui/Button";
 export default function MakeAPaymentPage() {
   return (
     <div className="bg-brand-canvas min-h-screen py-10 sm:py-16">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-4">
           <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-blue bg-brand-blue-light px-3.5 py-1 rounded-full">
             <CreditCard className="w-4 h-4 text-brand-blue" />
             <span>Existing Land Buyers</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-brand-ink tracking-tight font-sans">
+          <h1 className="text-[1.75rem] leading-tight xs:text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-ink tracking-tight font-sans">
             Make Your Monthly Loan Payment
           </h1>
           <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
@@ -22,9 +22,9 @@ export default function MakeAPaymentPage() {
         </div>
 
         {/* 2 Payment Options */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
           {/* Option 1: Online Loan Portal */}
-          <div className="bg-white rounded-3xl p-8 border-2 border-brand-blue/30 shadow-card flex flex-col justify-between space-y-6">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 border-2 border-brand-blue/30 shadow-card flex flex-col justify-between space-y-6">
             <div className="space-y-4">
               <div className="w-12 h-12 rounded-2xl bg-brand-blue-light text-brand-blue flex items-center justify-center font-bold">
                 <CreditCard className="w-6 h-6" />
@@ -60,7 +60,7 @@ export default function MakeAPaymentPage() {
           </div>
 
           {/* Option 2: Pay by Phone or Check */}
-          <div className="bg-white rounded-3xl p-8 border border-brand-border shadow-card flex flex-col justify-between space-y-6">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-brand-border shadow-card flex flex-col justify-between space-y-6">
             <div className="space-y-4">
               <div className="w-12 h-12 rounded-2xl bg-brand-sand text-brand-ink flex items-center justify-center font-bold">
                 <Phone className="w-6 h-6 text-brand-forest" />

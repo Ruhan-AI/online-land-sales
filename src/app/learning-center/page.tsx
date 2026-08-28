@@ -7,14 +7,14 @@ import { BookOpen, Clock, ArrowRight, Compass } from "lucide-react";
 export default function LearningCenterPage() {
   return (
     <div className="bg-brand-canvas min-h-screen py-10 sm:py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-4">
           <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-blue bg-brand-blue-light px-3.5 py-1 rounded-full">
             <BookOpen className="w-4 h-4 text-brand-blue" />
             <span>Land Buyer Education</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-brand-ink tracking-tight font-sans">
+          <h1 className="text-[1.75rem] leading-tight xs:text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-ink tracking-tight font-sans">
             Learning Center & Buyer Guides
           </h1>
           <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
@@ -23,7 +23,7 @@ export default function LearningCenterPage() {
         </div>
 
         {/* Articles Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {ARTICLES.map((art) => (
             <Link
               key={art.slug}

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Manrope, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
@@ -19,6 +19,14 @@ const sourceSerif = Source_Serif_4({
   variable: "--font-serif",
   display: "swap",
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  // Lets the page paint under the notch so `env(safe-area-inset-*)` reports real values
+  viewportFit: "cover",
+  themeColor: "#102633",
+};
 
 export const metadata: Metadata = {
   title: "Online Land Sales | Guaranteed Seller Financed Land Across the USA",

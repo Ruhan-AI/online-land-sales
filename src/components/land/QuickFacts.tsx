@@ -20,25 +20,25 @@ interface QuickFactsProps {
 
 export function QuickFacts({ property }: QuickFactsProps) {
   return (
-    <div className="bg-white border border-brand-border rounded-card p-6 shadow-soft space-y-6">
-      <div className="flex items-center justify-between pb-4 border-b border-brand-border">
+    <div className="bg-white border border-brand-border rounded-card p-5 sm:p-6 shadow-soft space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-3 pb-4 border-b border-brand-border">
         <h3 className="text-lg font-bold text-brand-ink flex items-center gap-2">
-          <FileText className="w-5 h-5 text-brand-blue" />
+          <FileText className="w-5 h-5 text-brand-blue shrink-0" />
           <span>Quick Property Facts</span>
         </h3>
-        <span className="text-xs text-brand-muted">
+        <span className="text-xs text-brand-muted shrink-0">
           Last Verified: {property.lastVerifiedAt}
         </span>
       </div>
 
       {/* Grid of Attributes */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 text-xs">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-5 text-xs">
         {/* APN */}
         <div className="p-3 rounded-xl bg-brand-canvas border border-brand-border space-y-1">
           <span className="text-slate-400 font-bold uppercase tracking-wider block text-[10px]">
             Parcel ID / APN
           </span>
-          <span className="font-bold text-brand-ink text-sm font-mono">{property.apn}</span>
+          <span className="font-bold text-brand-ink text-sm font-mono break-all">{property.apn}</span>
         </div>
 
         {/* Acreage */}
@@ -130,7 +130,7 @@ export function QuickFacts({ property }: QuickFactsProps) {
           <Zap className="w-4 h-4 text-brand-forest" />
           <span>Utilities & Off-Grid Verification</span>
         </h4>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
           <div>
             <span className="text-slate-500 block text-[10px]">Power:</span>
             <span className="font-bold text-brand-ink capitalize">

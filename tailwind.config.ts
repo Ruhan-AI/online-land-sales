@@ -8,6 +8,10 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        // Small-phone escape hatch: 360–399px devices are the tightest real target
+        xs: "400px",
+      },
       colors: {
         brand: {
           ink: "#102633",       // Primary ink

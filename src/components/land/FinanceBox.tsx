@@ -31,11 +31,11 @@ export function FinanceBox({ property }: FinanceBoxProps) {
   const isSold = property.status === "sold";
 
   return (
-    <div className="bg-white border-2 border-brand-forest/20 rounded-2xl p-6 shadow-card space-y-6 sticky top-28">
+    <div className="bg-white border-2 border-brand-forest/20 rounded-2xl p-5 sm:p-6 shadow-card space-y-5 sm:space-y-6 lg:sticky lg:top-28">
       {/* Header Badge */}
-      <div className="flex items-center justify-between">
-        <span className="text-xs font-bold uppercase tracking-wider text-brand-forest bg-brand-forest-light px-3 py-1 rounded-full flex items-center gap-1.5">
-          <Sparkles className="w-3.5 h-3.5 text-brand-forest" />
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-brand-forest bg-brand-forest-light px-3 py-1 rounded-full flex items-center gap-1.5">
+          <Sparkles className="w-3.5 h-3.5 text-brand-forest shrink-0" />
           <span>Guaranteed Seller Financing</span>
         </span>
         <span className="text-xs text-brand-muted font-medium">0% Credit Check</span>
@@ -45,7 +45,7 @@ export function FinanceBox({ property }: FinanceBoxProps) {
       <div className="grid grid-cols-2 p-1 bg-brand-sand rounded-xl border border-brand-border text-xs font-bold">
         <button
           onClick={() => setPurchaseType("financed")}
-          className={`py-2 px-3 rounded-lg transition-all ${
+          className={`py-2.5 px-2 sm:px-3 rounded-lg transition-all text-[11px] sm:text-xs ${
             purchaseType === "financed"
               ? "bg-brand-forest text-white shadow-sm font-extrabold"
               : "text-slate-700 hover:text-brand-ink"
@@ -55,7 +55,7 @@ export function FinanceBox({ property }: FinanceBoxProps) {
         </button>
         <button
           onClick={() => setPurchaseType("cash")}
-          className={`py-2 px-3 rounded-lg transition-all ${
+          className={`py-2.5 px-2 sm:px-3 rounded-lg transition-all text-[11px] sm:text-xs ${
             purchaseType === "cash"
               ? "bg-brand-ink text-white shadow-sm font-extrabold"
               : "text-slate-700 hover:text-brand-ink"
@@ -95,14 +95,14 @@ export function FinanceBox({ property }: FinanceBoxProps) {
                     <div
                       key={plan.id}
                       onClick={() => setSelectedPlanId(plan.id)}
-                      className={`p-3 rounded-xl border cursor-pointer transition-all flex items-center justify-between text-xs ${
+                      className={`p-3 rounded-xl border cursor-pointer transition-all flex items-center justify-between gap-3 text-xs ${
                         isSelected
                           ? "border-brand-forest bg-brand-forest-light/30 shadow-sm"
                           : "border-brand-border hover:bg-brand-sand-light"
                       }`}
                     >
-                      <div className="space-y-0.5">
-                        <div className="flex items-center gap-2">
+                      <div className="space-y-0.5 min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
                           <span className="font-bold text-brand-ink">{plan.name}</span>
                           {plan.badge && (
                             <span className="text-[10px] bg-brand-sand text-brand-ink font-semibold px-1.5 py-0.2 rounded">
@@ -128,25 +128,25 @@ export function FinanceBox({ property }: FinanceBoxProps) {
 
           {/* Detailed Fee Line Items */}
           <div className="space-y-2 text-xs border-t border-brand-border pt-4">
-            <div className="flex justify-between text-slate-600">
+            <div className="flex flex-wrap justify-between gap-x-3 text-slate-600">
               <span>Down Payment:</span>
               <span className="font-semibold text-brand-ink">
                 {formatMoney(currentPlan.downPayment)}
               </span>
             </div>
-            <div className="flex justify-between text-slate-600">
+            <div className="flex flex-wrap justify-between gap-x-3 text-slate-600">
               <span>One-Time Document Prep Fee:</span>
               <span className="font-semibold text-brand-ink">
                 {formatMoney(currentPlan.docFee)}
               </span>
             </div>
-            <div className="flex justify-between text-slate-600">
+            <div className="flex flex-wrap justify-between gap-x-3 text-slate-600">
               <span>Total Land Price:</span>
               <span className="font-semibold text-brand-ink">
                 {formatMoney(currentPlan.totalFinancedPrice)}
               </span>
             </div>
-            <div className="flex justify-between text-slate-600">
+            <div className="flex flex-wrap justify-between gap-x-3 text-slate-600">
               <span>Estimated Property Taxes:</span>
               <span className="text-slate-600">
                 ~{formatMoney(currentPlan.estimatedMonthlyTax)}/mo
@@ -154,7 +154,7 @@ export function FinanceBox({ property }: FinanceBoxProps) {
             </div>
 
             {/* Total Due Today */}
-            <div className="flex justify-between text-base font-extrabold text-brand-ink pt-3 border-t border-dashed border-brand-border">
+            <div className="flex flex-wrap items-baseline justify-between gap-x-3 text-sm sm:text-base font-extrabold text-brand-ink pt-3 border-t border-dashed border-brand-border">
               <span>Total Due Today to Reserve:</span>
               <span className="text-brand-forest font-extrabold text-xl">
                 {formatMoney(currentPlan.amountDueToday)}
@@ -180,13 +180,13 @@ export function FinanceBox({ property }: FinanceBoxProps) {
           </div>
 
           <div className="space-y-2 text-xs border-t border-brand-border pt-4">
-            <div className="flex justify-between text-slate-600">
+            <div className="flex flex-wrap justify-between gap-x-3 text-slate-600">
               <span>One-Time Deed Recording & Doc Fee:</span>
               <span className="font-semibold text-brand-ink">
                 {formatMoney(property.docFee)}
               </span>
             </div>
-            <div className="flex justify-between text-slate-600">
+            <div className="flex flex-wrap justify-between gap-x-3 text-slate-600">
               <span>Deed Delivery:</span>
               <span className="font-semibold text-brand-forest">
                 Special Warranty Deed within 14 days

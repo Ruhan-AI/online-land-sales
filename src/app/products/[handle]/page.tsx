@@ -59,7 +59,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
   ];
 
   return (
-    <div className="bg-brand-canvas min-h-screen py-6 sm:py-10">
+    // Bottom padding clears the fixed mobile reserve bar (hidden from lg up)
+    <div className="bg-brand-canvas min-h-screen py-6 sm:py-10 pb-32 lg:pb-10">
       {/* Inject JSON-LD Structured Data */}
       <script
         type="application/ld+json"
@@ -75,21 +76,30 @@ export default async function ProductPage({ params }: ProductPageProps) {
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        {/* Breadcrumb Navigation */}
+        {/* Breadcrumb Navigation — the final (longest) crumb is dropped on phones */}
         <nav className="flex items-center gap-1.5 text-xs text-brand-muted flex-wrap">
-          {breadcrumbs.map((crumb, idx) => (
-            <React.Fragment key={idx}>
-              <Link
-                href={crumb.url}
-                className="hover:text-brand-ink transition-colors font-medium"
-              >
-                {crumb.name}
-              </Link>
-              {idx < breadcrumbs.length - 1 && (
-                <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-              )}
-            </React.Fragment>
-          ))}
+          {breadcrumbs.map((crumb, idx) => {
+            const isLast = idx === breadcrumbs.length - 1;
+            return (
+              <React.Fragment key={idx}>
+                <Link
+                  href={crumb.url}
+                  className={`hover:text-brand-ink transition-colors font-medium ${
+                    isLast ? "hidden sm:inline" : ""
+                  }`}
+                >
+                  {crumb.name}
+                </Link>
+                {!isLast && (
+                  <ChevronRight
+                    className={`w-3.5 h-3.5 text-slate-400 shrink-0 ${
+                      idx === breadcrumbs.length - 2 ? "hidden sm:inline" : ""
+                    }`}
+                  />
+                )}
+              </React.Fragment>
+            );
+          })}
         </nav>
 
         {/* Property Header Banner */}
@@ -118,8 +128,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
               {property.title}
             </h1>
 
-            <div className="flex items-center gap-2 text-xs text-brand-muted font-medium">
-              <MapPin className="w-4 h-4 text-brand-blue" />
+            <div className="flex items-start gap-2 text-xs text-brand-muted font-medium">
+              <MapPin className="w-4 h-4 text-brand-blue shrink-0 mt-px" />
               <span>
                 {property.county}, {property.state} • {property.nearestTown} ({property.distanceToTownMiles} miles)
               </span>
@@ -134,12 +144,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
         {/* Main 2-Column Property Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Column: Media, Description, Quick Facts, Due Diligence, FAQs (8 cols) */}
-          <div className="lg:col-span-8 space-y-10">
+          <div className="lg:col-span-8 space-y-8 lg:space-y-10 min-w-0">
             {/* 1. Tabbed Media Gallery (Photos / 360 / Map) */}
             <PropertyGallery property={property} />
 
             {/* 2. Structured Narrative Description */}
-            <div className="bg-white border border-brand-border rounded-card p-6 sm:p-8 shadow-soft space-y-4">
+            <div className="bg-white border border-brand-border rounded-card p-5 sm:p-8 shadow-soft space-y-4">
               <h2 className="text-xl font-bold text-brand-ink">
                 About This Property
               </h2>
@@ -180,8 +190,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
             {/* 6. Frequently Asked Questions */}
             {property.faqs.length > 0 && (
-              <div className="bg-white border border-brand-border rounded-card p-6 sm:p-8 shadow-soft space-y-6">
-                <h3 className="text-xl font-bold text-brand-ink">
+              <div className="bg-white border border-brand-border rounded-card p-5 sm:p-8 shadow-soft space-y-6">
+                <h3 className="text-lg sm:text-xl font-bold text-brand-ink">
                   Frequently Asked Questions About This Lot
                 </h3>
                 <Accordion
@@ -203,10 +213,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
         {/* Comparable & Nearby Lots */}
         {relatedProperties.length > 0 && (
-          <div className="pt-12 border-t border-brand-border space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-2xl font-bold text-brand-ink">
+          <div className="pt-10 sm:pt-12 border-t border-brand-border space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="min-w-0">
+                <h3 className="text-xl sm:text-2xl font-bold text-brand-ink">
                   Similar Available Properties
                 </h3>
                 <p className="text-xs text-brand-muted">
@@ -215,13 +225,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
               </div>
               <Link
                 href="/land"
-                className="text-xs font-bold text-brand-blue hover:underline hidden sm:block"
+                className="text-xs font-bold text-brand-blue hover:underline shrink-0"
               >
                 View Full Catalog →
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 sm:gap-6">
               {relatedProperties.map((rel) => (
                 <PropertyCard key={rel.id} property={rel} layout="grid" />
               ))}

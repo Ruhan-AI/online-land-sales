@@ -27,7 +27,7 @@ export function Testimonials() {
   ];
 
   return (
-    <section className="py-16 sm:py-24 bg-brand-canvas">
+    <section className="py-12 sm:py-16 lg:py-24 bg-brand-canvas">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="text-center max-w-2xl mx-auto space-y-3">
           <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-800 bg-amber-100 px-3 py-1 rounded-full">
@@ -42,11 +42,11 @@ export function Testimonials() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {reviews.map((rev, i) => (
             <div
               key={i}
-              className="bg-white rounded-3xl p-8 border border-brand-border shadow-soft flex flex-col justify-between space-y-6 hover:shadow-hover transition-shadow relative"
+              className="bg-white rounded-3xl p-6 sm:p-8 border border-brand-border shadow-soft flex flex-col justify-between space-y-5 sm:space-y-6 hover:shadow-hover transition-shadow relative"
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">

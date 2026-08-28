@@ -31,14 +31,14 @@ export default function CartPage() {
   };
 
   return (
-    <div className="bg-brand-canvas min-h-screen py-10 sm:py-16">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-        <h1 className="text-3xl font-extrabold text-brand-ink tracking-tight font-sans">
+    <div className="bg-brand-canvas min-h-screen py-8 sm:py-16">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-ink tracking-tight font-sans">
           Your Property Reservation Cart
         </h1>
 
         {!item ? (
-          <div className="bg-white rounded-3xl p-12 border border-brand-border text-center space-y-4 shadow-soft">
+          <div className="bg-white rounded-3xl p-8 sm:p-12 border border-brand-border text-center space-y-4 shadow-soft">
             <div className="w-16 h-16 rounded-full bg-brand-sand flex items-center justify-center mx-auto text-brand-muted">
               <ShieldCheck className="w-8 h-8" />
             </div>
@@ -53,11 +53,11 @@ export default function CartPage() {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
             {/* Left: Item Breakdown */}
-            <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-brand-border shadow-soft space-y-6">
-              <div className="flex gap-4">
-                <div className="relative w-28 h-28 rounded-2xl overflow-hidden shrink-0 border border-brand-border">
+            <div className="lg:col-span-7 bg-white rounded-3xl p-5 sm:p-8 border border-brand-border shadow-soft space-y-6 min-w-0">
+              <div className="flex gap-3 sm:gap-4">
+                <div className="relative w-20 h-20 sm:w-28 sm:h-28 rounded-2xl overflow-hidden shrink-0 border border-brand-border">
                   <Image
                     src={item.property.primaryImage}
                     alt={item.property.title}
@@ -67,14 +67,15 @@ export default function CartPage() {
                 </div>
 
                 <div className="flex-1 space-y-1 min-w-0">
-                  <div className="flex items-start justify-between">
-                    <span className="text-xs font-bold text-brand-blue uppercase font-mono">
+                  <div className="flex items-start justify-between gap-2">
+                    <span className="text-xs font-bold text-brand-blue uppercase font-mono truncate min-w-0">
                       {item.property.propertyCode}
                     </span>
                     <button
                       onClick={() => removeFromCart(item.property.id)}
-                      className="text-slate-400 hover:text-brand-clay transition-colors"
+                      className="flex items-center justify-center w-9 h-9 -mt-2 -mr-2 shrink-0 text-slate-400 hover:text-brand-clay transition-colors"
                       title="Remove"
+                      aria-label="Remove from cart"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -93,7 +94,7 @@ export default function CartPage() {
 
               {/* Terms Table */}
               <div className="border-t border-brand-border pt-4 space-y-2 text-xs text-slate-700">
-                <div className="flex justify-between">
+                <div className="flex flex-wrap justify-between gap-x-3">
                   <span>Total Purchase Price:</span>
                   <span className="font-bold text-brand-ink">
                     {formatMoney(
@@ -106,24 +107,24 @@ export default function CartPage() {
 
                 {item.purchaseType === "financed" && (
                   <>
-                    <div className="flex justify-between">
+                    <div className="flex flex-wrap justify-between gap-x-3">
                       <span>Monthly Installment:</span>
                       <span className="font-bold text-brand-forest">
                         {formatMoney(item.selectedPlan.monthlyPayment)} / month ({item.selectedPlan.termMonths} mo @ {item.selectedPlan.interestRate}%)
                       </span>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex flex-wrap justify-between gap-x-3">
                       <span>Down Payment (Applies to Principal):</span>
                       <span>{formatMoney(item.selectedPlan.downPayment)}</span>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex flex-wrap justify-between gap-x-3">
                       <span>Document Prep Fee (One-Time):</span>
                       <span>{formatMoney(item.selectedPlan.docFee)}</span>
                     </div>
                   </>
                 )}
 
-                <div className="flex justify-between text-base font-extrabold text-brand-ink pt-3 border-t border-dashed border-brand-border">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-3 text-sm sm:text-base font-extrabold text-brand-ink pt-3 border-t border-dashed border-brand-border">
                   <span>Total Amount Due Today:</span>
                   <span className="text-xl text-brand-forest">
                     {formatMoney(item.amountDueToday)}
@@ -133,7 +134,7 @@ export default function CartPage() {
             </div>
 
             {/* Right: Checkout Box */}
-            <div className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-8 border border-brand-border shadow-card space-y-6">
+            <div className="lg:col-span-5 bg-white rounded-3xl p-5 sm:p-8 border border-brand-border shadow-card space-y-6 min-w-0">
               <h3 className="font-bold text-lg text-brand-ink">Order Summary</h3>
 
               <div className="bg-brand-sand/50 rounded-2xl p-4 space-y-2 text-xs text-slate-700">
@@ -152,7 +153,7 @@ export default function CartPage() {
                   type="checkbox"
                   checked={termsAgreed}
                   onChange={(e) => setTermsAgreed(e.target.checked)}
-                  className="w-4 h-4 mt-0.5 rounded border-slate-300 text-brand-forest focus:ring-brand-forest"
+                  className="w-5 h-5 mt-px shrink-0 rounded border-slate-300 text-brand-forest focus:ring-brand-forest"
                 />
                 <span className="text-xs text-slate-600 leading-tight">
                   I agree to the{" "}

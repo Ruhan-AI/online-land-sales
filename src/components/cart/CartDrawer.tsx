@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { X, Trash2, ShieldCheck, ArrowRight, Lock, CheckCircle2 } from "lucide-react";
@@ -13,6 +13,16 @@ export function CartDrawer() {
   const { cart, isCartOpen, setIsCartOpen, removeFromCart } = useStore();
   const [termsAgreed, setTermsAgreed] = useState(false);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+
+  // Keep the page behind the drawer from scrolling under a touch drag
+  useEffect(() => {
+    if (!isCartOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [isCartOpen]);
 
   if (!isCartOpen) return null;
 
@@ -41,9 +51,9 @@ export function CartDrawer() {
       />
 
       <div className="fixed inset-y-0 right-0 max-w-full flex pl-0 sm:pl-10">
-        <div className="w-screen max-w-full sm:max-w-md bg-white shadow-2xl border-l border-brand-border flex flex-col animate-in slide-in-from-right duration-300">
+        <div className="w-screen max-w-full sm:max-w-md bg-white shadow-2xl border-l border-brand-border flex flex-col h-full animate-in slide-in-from-right duration-300">
           {/* Header */}
-          <div className="p-5 border-b border-brand-border flex items-center justify-between bg-brand-sand-light/60">
+          <div className="p-4 sm:p-5 border-b border-brand-border flex items-center justify-between gap-3 bg-brand-sand-light/60 shrink-0">
             <div className="flex items-center gap-2">
               <h3 className="text-lg font-bold text-brand-ink">Your Land Reservation</h3>
               {cart.length > 0 && (
@@ -54,14 +64,15 @@ export function CartDrawer() {
             </div>
             <button
               onClick={() => setIsCartOpen(false)}
-              className="p-1.5 text-slate-400 hover:text-brand-ink rounded-lg hover:bg-brand-sand transition-colors"
+              aria-label="Close cart"
+              className="flex items-center justify-center w-10 h-10 -mr-2 shrink-0 text-slate-400 hover:text-brand-ink rounded-lg hover:bg-brand-sand transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* Body */}
-          <div className="flex-1 overflow-y-auto p-5 space-y-6">
+          <div className="flex-1 overflow-y-auto overscroll-contain p-4 sm:p-5 space-y-6">
             {!item ? (
               <div className="text-center py-16 space-y-4">
                 <div className="w-16 h-16 rounded-full bg-brand-sand flex items-center justify-center mx-auto text-brand-muted">
@@ -100,8 +111,9 @@ export function CartDrawer() {
                         </span>
                         <button
                           onClick={() => removeFromCart(item.property.id)}
-                          className="text-slate-400 hover:text-brand-clay transition-colors"
+                          className="flex items-center justify-center w-9 h-9 -mt-2 -mr-1 shrink-0 text-slate-400 hover:text-brand-clay transition-colors"
                           title="Remove item"
+                          aria-label="Remove item from cart"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -122,7 +134,7 @@ export function CartDrawer() {
 
                   {/* Financial Breakdown Table */}
                   <div className="border-t border-brand-border pt-3 space-y-1.5 text-xs">
-                    <div className="flex justify-between text-slate-600">
+                    <div className="flex flex-wrap justify-between gap-x-3 text-slate-600">
                       <span>Total Land Price:</span>
                       <span className="font-semibold text-brand-ink">
                         {formatMoney(
@@ -135,24 +147,24 @@ export function CartDrawer() {
 
                     {item.purchaseType === "financed" && (
                       <>
-                        <div className="flex justify-between text-slate-600">
+                        <div className="flex flex-wrap justify-between gap-x-3 text-slate-600">
                           <span>Monthly Payment:</span>
                           <span className="font-semibold text-brand-forest">
                             {formatMoney(item.selectedPlan.monthlyPayment)} / month ({item.selectedPlan.termMonths} mo @ {item.selectedPlan.interestRate}%)
                           </span>
                         </div>
-                        <div className="flex justify-between text-slate-600">
+                        <div className="flex flex-wrap justify-between gap-x-3 text-slate-600">
                           <span>Down Payment:</span>
                           <span>{formatMoney(item.selectedPlan.downPayment)}</span>
                         </div>
-                        <div className="flex justify-between text-slate-600">
+                        <div className="flex flex-wrap justify-between gap-x-3 text-slate-600">
                           <span>One-time Doc Prep Fee:</span>
                           <span>{formatMoney(item.selectedPlan.docFee)}</span>
                         </div>
                       </>
                     )}
 
-                    <div className="flex justify-between text-brand-ink font-bold pt-2 border-t border-dashed border-brand-border text-sm">
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-3 text-brand-ink font-bold pt-2 border-t border-dashed border-brand-border text-sm">
                       <span>Amount Due Today:</span>
                       <span className="text-brand-forest font-extrabold">
                         {formatMoney(item.amountDueToday)}
@@ -181,7 +193,7 @@ export function CartDrawer() {
                       type="checkbox"
                       checked={termsAgreed}
                       onChange={(e) => setTermsAgreed(e.target.checked)}
-                      className="w-4 h-4 mt-0.5 rounded border-slate-300 text-brand-forest focus:ring-brand-forest"
+                      className="w-5 h-5 mt-px shrink-0 rounded border-slate-300 text-brand-forest focus:ring-brand-forest"
                     />
                     <span className="text-xs text-slate-600 leading-tight">
                       I agree to the{" "}
@@ -202,7 +214,7 @@ export function CartDrawer() {
 
           {/* Footer Actions */}
           {item && (
-            <div className="p-5 border-t border-brand-border bg-white space-y-3">
+            <div className="p-4 sm:p-5 border-t border-brand-border bg-white space-y-3 safe-area-inset-bottom">
               <div className="flex items-center justify-between text-sm font-bold text-brand-ink">
                 <span>Total Due Right Now:</span>
                 <span className="text-lg text-brand-forest font-extrabold">

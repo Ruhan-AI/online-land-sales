@@ -35,7 +35,7 @@ export function HeroFinder() {
   };
 
   return (
-    <section className="relative overflow-hidden bg-brand-ink text-white pt-12 pb-24 sm:pt-16 sm:pb-32">
+    <section className="relative overflow-hidden bg-brand-ink text-white pt-10 pb-16 sm:pt-16 sm:pb-24 lg:pb-32">
       {/* Background Aerial Landscape with overlay */}
       <div className="absolute inset-0 z-0">
         <Image
@@ -50,30 +50,30 @@ export function HeroFinder() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Hero Copy */}
-        <div className="text-center max-w-3xl mx-auto space-y-6">
-          <div className="inline-flex items-center gap-2 bg-brand-forest/30 border border-brand-forest/50 backdrop-blur-md text-emerald-300 text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
+        <div className="text-center max-w-3xl mx-auto space-y-4 sm:space-y-6">
+          <div className="inline-flex items-center gap-2 bg-brand-forest/30 border border-brand-forest/50 backdrop-blur-md text-emerald-300 text-[11px] sm:text-xs font-bold px-3 sm:px-4 py-1.5 rounded-full shadow-lg">
+            <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>Guaranteed Seller Financing • 0% Bank Credit Checks</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-tight font-sans">
+          <h1 className="text-[2rem] leading-[1.1] xs:text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white sm:leading-tight font-sans text-balance">
             Own Land Without <br className="hidden sm:inline" />
             <span className="bg-gradient-to-r from-emerald-300 via-brand-blue-light to-amber-200 bg-clip-text text-transparent">
               the Bank.
             </span>
           </h1>
 
-          <p className="text-base sm:text-lg text-slate-300 font-normal leading-relaxed max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base lg:text-lg text-slate-300 font-normal leading-relaxed max-w-2xl mx-auto">
             Discover affordable acreage across the American West & Florida with low down payments, transparent monthly terms, and our 90-day money-back guarantee.
           </p>
         </div>
 
         {/* Smart Finder Widget */}
-        <div className="mt-10 max-w-4xl mx-auto bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl border border-brand-border text-brand-ink">
+        <div className="mt-8 sm:mt-10 max-w-4xl mx-auto bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl border border-brand-border text-brand-ink">
           <form onSubmit={handleSearch} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
             {/* State */}
             <div className="space-y-1.5">
-              <label className="block text-[11px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1">
+              <label className="flex items-center gap-1 text-[11px] font-extrabold uppercase tracking-wider text-slate-500">
                 <MapPin className="w-3.5 h-3.5 text-brand-blue" />
                 <span>Location / State</span>
               </label>
@@ -93,7 +93,7 @@ export function HeroFinder() {
 
             {/* Monthly Budget */}
             <div className="space-y-1.5">
-              <label className="block text-[11px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1">
+              <label className="flex items-center gap-1 text-[11px] font-extrabold uppercase tracking-wider text-slate-500">
                 <DollarSign className="w-3.5 h-3.5 text-brand-forest" />
                 <span>Max Monthly Budget</span>
               </label>
@@ -112,7 +112,7 @@ export function HeroFinder() {
 
             {/* Acreage */}
             <div className="space-y-1.5">
-              <label className="block text-[11px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1">
+              <label className="flex items-center gap-1 text-[11px] font-extrabold uppercase tracking-wider text-slate-500">
                 <Mountain className="w-3.5 h-3.5 text-brand-clay" />
                 <span>Minimum Acreage</span>
               </label>
@@ -144,29 +144,44 @@ export function HeroFinder() {
           </form>
 
           {/* Quick Filter Links */}
-          <div className="mt-4 pt-3 border-t border-brand-border/60 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-600">
-            <div className="flex flex-wrap items-center gap-2">
+          <div className="mt-4 pt-3 border-t border-brand-border/60 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-xs text-slate-600">
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
               <span className="font-bold text-slate-400">Popular:</span>
-              <Link href="/land?maxMonthly=175" className="hover:text-brand-forest font-semibold underline">
+              <Link
+                href="/land?maxMonthly=175"
+                className="py-1.5 hover:text-brand-forest font-semibold underline"
+              >
                 Under $175/mo
               </Link>
-              <span>•</span>
-              <Link href="/land?has360=true" className="hover:text-brand-forest font-semibold underline flex items-center gap-1 text-brand-forest">
-                <Sparkles className="w-3 h-3" />
+              <span aria-hidden="true">•</span>
+              <Link
+                href="/land?has360=true"
+                className="py-1.5 hover:text-brand-forest font-semibold underline flex items-center gap-1 text-brand-forest"
+              >
+                <Sparkles className="w-3 h-3 shrink-0" />
                 360° Tours
               </Link>
-              <span>•</span>
-              <Link href="/land?state=Arizona" className="hover:text-brand-forest font-semibold underline">
+              <span aria-hidden="true">•</span>
+              <Link
+                href="/land?state=Arizona"
+                className="py-1.5 hover:text-brand-forest font-semibold underline"
+              >
                 Arizona Land
               </Link>
-              <span>•</span>
-              <Link href="/land?state=Colorado" className="hover:text-brand-forest font-semibold underline">
+              <span aria-hidden="true">•</span>
+              <Link
+                href="/land?state=Colorado"
+                className="py-1.5 hover:text-brand-forest font-semibold underline"
+              >
                 Colorado Lots
               </Link>
             </div>
 
-            <Link href="/map" className="font-bold text-brand-blue hover:underline flex items-center gap-1">
-              <Compass className="w-3.5 h-3.5" />
+            <Link
+              href="/map"
+              className="py-1.5 font-bold text-brand-blue hover:underline flex items-center gap-1"
+            >
+              <Compass className="w-3.5 h-3.5 shrink-0" />
               <span>Or Explore On Map</span>
             </Link>
           </div>

@@ -166,34 +166,36 @@ export function PropertyMap({
       <div ref={mapContainerRef} className="w-full h-full" />
 
       {/* Layer Switcher Button */}
-      <div className="absolute top-4 right-4 z-[400] flex items-center bg-white/90 backdrop-blur-md rounded-xl p-1 shadow-card border border-brand-border">
+      <div className="absolute top-2.5 right-2.5 sm:top-4 sm:right-4 z-[400] flex items-center bg-white/90 backdrop-blur-md rounded-xl p-1 shadow-card border border-brand-border">
         <button
           onClick={() => setMapLayer("terrain")}
-          className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-colors ${
+          className={`text-[11px] sm:text-xs font-bold px-2.5 sm:px-3 py-2 rounded-lg transition-colors whitespace-nowrap ${
             mapLayer === "terrain"
               ? "bg-brand-ink text-white shadow-sm"
               : "text-slate-600 hover:text-brand-ink"
           }`}
         >
-          Street / Map
+          <span className="sm:hidden">Map</span>
+          <span className="hidden sm:inline">Street / Map</span>
         </button>
         <button
           onClick={() => setMapLayer("satellite")}
-          className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-colors ${
+          className={`text-[11px] sm:text-xs font-bold px-2.5 sm:px-3 py-2 rounded-lg transition-colors whitespace-nowrap ${
             mapLayer === "satellite"
               ? "bg-brand-ink text-white shadow-sm"
               : "text-slate-600 hover:text-brand-ink"
           }`}
         >
-          Satellite Aerial
+          <span className="sm:hidden">Satellite</span>
+          <span className="hidden sm:inline">Satellite Aerial</span>
         </button>
       </div>
 
       {/* Active Selected Property Card Overlay */}
       {activeProperty && (
-        <div className="absolute bottom-4 left-4 right-4 sm:right-auto sm:w-96 z-[400] bg-white rounded-2xl shadow-2xl border border-brand-border p-4 animate-in slide-in-from-bottom-3 duration-200">
+        <div className="absolute bottom-2.5 left-2.5 right-2.5 sm:bottom-4 sm:left-4 sm:right-auto sm:w-96 z-[400] bg-white rounded-2xl shadow-2xl border border-brand-border p-3 sm:p-4 animate-in slide-in-from-bottom-3 duration-200">
           <div className="flex gap-3">
-            <div className="relative w-24 h-24 rounded-xl overflow-hidden shrink-0 border border-brand-border">
+            <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden shrink-0 border border-brand-border">
               <Image
                 src={activeProperty.primaryImage}
                 alt={activeProperty.title}
@@ -209,13 +211,14 @@ export function PropertyMap({
             </div>
 
             <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold text-brand-blue uppercase truncate">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-[11px] font-bold text-brand-blue uppercase truncate min-w-0">
                   {activeProperty.county}, {activeProperty.stateCode}
                 </span>
                 <button
                   onClick={() => setActiveProperty(null)}
-                  className="text-slate-400 hover:text-brand-ink text-xs font-bold px-1"
+                  aria-label="Close property preview"
+                  className="flex items-center justify-center -mt-1 -mr-1 w-8 h-8 shrink-0 text-slate-400 hover:text-brand-ink text-xs font-bold"
                 >
                   ✕
                 </button>
@@ -228,19 +231,19 @@ export function PropertyMap({
                 {formatAcres(activeProperty.acres)} • APN: {activeProperty.apn}
               </p>
 
-              <div className="mt-2 flex items-center justify-between">
-                <div>
+              <div className="mt-2 flex items-center justify-between gap-2">
+                <div className="min-w-0">
                   <span className="text-xs font-extrabold text-brand-forest">
                     {formatMoney(activeProperty.defaultPlan.monthlyPayment)}/mo
                   </span>
-                  <span className="text-[10px] text-slate-500 block">
+                  <span className="text-[10px] text-slate-500 block truncate">
                     Cash: {formatMoney(activeProperty.cashPrice)}
                   </span>
                 </div>
 
                 <Link
                   href={`/products/${activeProperty.handle}`}
-                  className="inline-flex items-center gap-1 bg-brand-ink hover:bg-brand-forest text-white text-xs font-semibold py-1.5 px-3 rounded-lg transition-colors"
+                  className="inline-flex shrink-0 items-center gap-1 bg-brand-ink hover:bg-brand-forest text-white text-xs font-semibold py-2.5 px-3 rounded-lg transition-colors"
                 >
                   <span>Details</span>
                   <ArrowRight className="w-3 h-3" />

@@ -17,7 +17,7 @@ function ConfirmationContent() {
     <div className="bg-brand-canvas min-h-screen py-12 sm:py-20">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {/* Success Card */}
-        <div className="bg-white rounded-3xl p-8 sm:p-12 border border-brand-border shadow-card text-center space-y-6">
+        <div className="bg-white rounded-3xl p-6 sm:p-12 border border-brand-border shadow-card text-center space-y-6">
           <div className="w-20 h-20 rounded-full bg-emerald-100 text-brand-forest flex items-center justify-center mx-auto shadow-sm">
             <CheckCircle2 className="w-10 h-10" />
           </div>
@@ -26,7 +26,7 @@ function ConfirmationContent() {
             <span className="text-xs font-bold text-brand-forest uppercase tracking-wider bg-brand-forest-light px-3 py-1 rounded-full">
               Reservation Confirmed
             </span>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-brand-ink tracking-tight font-sans">
+            <h1 className="text-2xl sm:text-4xl font-extrabold text-brand-ink tracking-tight font-sans">
               Congratulations on Your Land Reservation!
             </h1>
             <p className="text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
@@ -36,7 +36,7 @@ function ConfirmationContent() {
           </div>
 
           {/* Timeline of What Happens Next */}
-          <div className="bg-brand-sand-light rounded-2xl p-6 border border-brand-border text-left space-y-4">
+          <div className="bg-brand-sand-light rounded-2xl p-4 sm:p-6 border border-brand-border text-left space-y-4">
             <h3 className="font-bold text-sm text-brand-ink flex items-center gap-2">
               <FileText className="w-4 h-4 text-brand-blue" />
               <span>What Happens Next? (Next 24 Hours)</span>

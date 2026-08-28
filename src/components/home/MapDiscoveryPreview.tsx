@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 
 export function MapDiscoveryPreview() {
   return (
-    <section className="py-16 sm:py-20 bg-brand-sand-light/50 border-y border-brand-border">
+    <section className="py-12 sm:py-16 lg:py-20 bg-brand-sand-light/50 border-y border-brand-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -24,15 +24,20 @@ export function MapDiscoveryPreview() {
             </p>
           </div>
 
-          <Link href="/map">
-            <Button variant="primary" size="md" icon={<Compass className="w-4 h-4" />}>
+          <Link href="/map" className="shrink-0">
+            <Button
+              variant="primary"
+              size="md"
+              className="w-full sm:w-auto justify-center"
+              icon={<Compass className="w-4 h-4" />}
+            >
               Open Full-Screen Map
             </Button>
           </Link>
         </div>
 
         {/* Map Embed */}
-        <div className="h-[380px] sm:h-[520px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-card border border-brand-border">
+        <div className="h-[320px] sm:h-[420px] lg:h-[520px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-card border border-brand-border">
           <PropertyMap properties={PROPERTIES} className="h-full w-full" />
         </div>
       </div>

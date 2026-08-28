@@ -36,7 +36,7 @@ export function GoalGrid() {
   ];
 
   return (
-    <section className="py-16 sm:py-24 bg-brand-canvas">
+    <section className="py-12 sm:py-16 lg:py-24 bg-brand-canvas">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="text-center max-w-2xl mx-auto space-y-3">
           <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-clay bg-brand-clay-light px-3 py-1 rounded-full">
@@ -50,7 +50,7 @@ export function GoalGrid() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {goals.map((goal, i) => (
             <Link
               key={i}

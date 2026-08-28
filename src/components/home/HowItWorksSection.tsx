@@ -28,7 +28,7 @@ export function HowItWorksSection() {
   ];
 
   return (
-    <section className="py-16 sm:py-24 bg-brand-canvas">
+    <section className="py-12 sm:py-16 lg:py-24 bg-brand-canvas">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Title */}
         <div className="text-center max-w-2xl mx-auto space-y-3">
@@ -44,11 +44,11 @@ export function HowItWorksSection() {
         </div>
 
         {/* Steps Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 relative">
           {steps.map((step, i) => (
             <div
               key={i}
-              className="relative bg-white rounded-3xl p-8 border border-brand-border shadow-soft flex flex-col justify-between space-y-6 group hover:shadow-hover transition-all"
+              className="relative bg-white rounded-3xl p-6 sm:p-8 border border-brand-border shadow-soft flex flex-col justify-between space-y-6 group hover:shadow-hover transition-all"
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">

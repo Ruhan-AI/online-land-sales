@@ -8,7 +8,7 @@ export function HotLots() {
   const hotLots = PROPERTIES.filter((p) => p.status === "available").slice(0, 3);
 
   return (
-    <section className="py-16 sm:py-20 bg-brand-canvas">
+    <section className="py-12 sm:py-16 lg:py-20 bg-brand-canvas">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">

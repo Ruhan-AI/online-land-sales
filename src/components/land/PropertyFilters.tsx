@@ -23,6 +23,8 @@ interface PropertyFiltersProps {
   onChange: (filters: FilterState) => void;
   onReset: () => void;
   totalCount: number;
+  /** Drops the card chrome so the panel can sit flush inside the mobile drawer. */
+  bare?: boolean;
 }
 
 export function PropertyFilters({
@@ -30,6 +32,7 @@ export function PropertyFilters({
   onChange,
   onReset,
   totalCount,
+  bare = false,
 }: PropertyFiltersProps) {
   const update = (key: keyof FilterState, value: any) => {
     onChange({ ...filters, [key]: value });
@@ -46,22 +49,28 @@ export function PropertyFilters({
     filters.has360;
 
   return (
-    <div className="bg-white border border-brand-border rounded-card p-5 space-y-6 shadow-soft">
+    <div
+      className={
+        bare
+          ? "space-y-6"
+          : "bg-white border border-brand-border rounded-card p-5 space-y-6 shadow-soft"
+      }
+    >
       {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-brand-border">
-        <div className="flex items-center gap-2 font-bold text-brand-ink text-sm">
-          <Filter className="w-4 h-4 text-brand-blue" />
+      <div className="flex items-center justify-between gap-2 pb-4 border-b border-brand-border">
+        <div className="flex items-center gap-2 font-bold text-brand-ink text-sm min-w-0">
+          <Filter className="w-4 h-4 text-brand-blue shrink-0" />
           <span>Filters</span>
-          <span className="text-xs bg-brand-sand px-2 py-0.5 rounded-full text-brand-ink font-semibold">
+          <span className="text-xs bg-brand-sand px-2 py-0.5 rounded-full text-brand-ink font-semibold whitespace-nowrap">
             {totalCount} {totalCount === 1 ? "Lot" : "Lots"}
           </span>
         </div>
         {hasActiveFilters && (
           <button
             onClick={onReset}
-            className="text-xs text-brand-clay hover:underline flex items-center gap-1 font-semibold"
+            className="text-xs text-brand-clay hover:underline flex items-center gap-1 font-semibold shrink-0"
           >
-            <RotateCcw className="w-3 h-3" />
+            <RotateCcw className="w-3 h-3 shrink-0" />
             <span>Reset</span>
           </button>
         )}
@@ -91,7 +100,7 @@ export function PropertyFilters({
         <label className="block text-xs font-bold text-brand-ink uppercase tracking-wider">
           Max Monthly Payment
         </label>
-        <div className="grid grid-cols-3 gap-1.5 text-xs font-medium">
+        <div className="grid grid-cols-3 gap-1.5 sm:gap-2 text-xs font-medium">
           {[
             { label: "Any", value: "" },
             { label: "< $175", value: "175" },
@@ -102,7 +111,7 @@ export function PropertyFilters({
             <button
               key={btn.value}
               onClick={() => update("maxMonthly", btn.value)}
-              className={`py-1.5 px-2 rounded-lg border transition-all ${
+              className={`py-2.5 px-2 rounded-lg border transition-all ${
                 filters.maxMonthly === btn.value
                   ? "bg-brand-forest text-white border-brand-forest font-bold shadow-sm"
                   : "bg-brand-sand-light hover:bg-brand-sand text-slate-700 border-brand-border"
@@ -119,7 +128,7 @@ export function PropertyFilters({
         <label className="block text-xs font-bold text-brand-ink uppercase tracking-wider">
           Acreage
         </label>
-        <div className="grid grid-cols-2 gap-1.5 text-xs font-medium">
+        <div className="grid grid-cols-2 gap-1.5 sm:gap-2 text-xs font-medium">
           {[
             { label: "All Sizes", min: "", max: "" },
             { label: "Under 1 Acre", min: "", max: "1" },
@@ -134,7 +143,7 @@ export function PropertyFilters({
                   update("minAcres", btn.min);
                   update("maxAcres", btn.max);
                 }}
-                className={`py-1.5 px-2 rounded-lg border transition-all ${
+                className={`py-2.5 px-2 rounded-lg border transition-all ${
                   isSelected
                     ? "bg-brand-ink text-white border-brand-ink font-bold shadow-sm"
                     : "bg-brand-sand-light hover:bg-brand-sand text-slate-700 border-brand-border"
@@ -185,7 +194,7 @@ export function PropertyFilters({
       {/* Special Feature Toggles */}
       <div className="space-y-3 pt-3 border-t border-brand-border">
         {/* 360 Available */}
-        <label className="flex items-center justify-between cursor-pointer select-none">
+        <label className="flex items-center justify-between gap-3 cursor-pointer select-none py-1.5">
           <span className="flex items-center gap-2 text-xs font-bold text-brand-ink">
             <Sparkles className="w-3.5 h-3.5 text-brand-forest" />
             <span>360° Virtual Tour Only</span>
@@ -194,12 +203,12 @@ export function PropertyFilters({
             type="checkbox"
             checked={filters.has360}
             onChange={(e) => update("has360", e.target.checked)}
-            className="w-4 h-4 rounded border-slate-300 text-brand-forest focus:ring-brand-forest"
+            className="w-5 h-5 shrink-0 rounded border-slate-300 text-brand-forest focus:ring-brand-forest"
           />
         </label>
 
         {/* Power at Street */}
-        <label className="flex items-center justify-between cursor-pointer select-none">
+        <label className="flex items-center justify-between gap-3 cursor-pointer select-none py-1.5">
           <span className="text-xs font-bold text-brand-ink">
             Power Lines at Street
           </span>
@@ -207,7 +216,7 @@ export function PropertyFilters({
             type="checkbox"
             checked={filters.hasPower}
             onChange={(e) => update("hasPower", e.target.checked)}
-            className="w-4 h-4 rounded border-slate-300 text-brand-forest focus:ring-brand-forest"
+            className="w-5 h-5 shrink-0 rounded border-slate-300 text-brand-forest focus:ring-brand-forest"
           />
         </label>
       </div>

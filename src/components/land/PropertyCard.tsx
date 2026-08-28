@@ -44,8 +44,8 @@ export function PropertyCard({ property, layout = "grid" }: PropertyCardProps) {
         {/* Gradient Overlay for badges */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 pointer-events-none" />
 
-        {/* Top Badges */}
-        <div className="absolute top-3 left-3 flex flex-wrap items-center gap-1.5 z-10">
+        {/* Top Badges — capped so they never crowd out the save button */}
+        <div className="absolute top-3 left-3 right-14 flex flex-wrap items-center gap-1.5 z-10">
           <span
             className={`text-[11px] font-bold px-2.5 py-1 rounded-full border shadow-sm backdrop-blur-md ${statusBadge.bg} ${statusBadge.color}`}
           >
@@ -73,7 +73,7 @@ export function PropertyCard({ property, layout = "grid" }: PropertyCardProps) {
               e.preventDefault();
               toggleSavedProperty(property.id);
             }}
-            className={`p-2 rounded-full backdrop-blur-md border shadow-sm transition-transform active:scale-90 ${
+            className={`flex items-center justify-center w-10 h-10 rounded-full backdrop-blur-md border shadow-sm transition-transform active:scale-90 ${
               isSaved
                 ? "bg-brand-clay text-white border-brand-clay"
                 : "bg-white/85 text-slate-700 hover:text-brand-clay hover:bg-white border-white/40"
@@ -94,15 +94,17 @@ export function PropertyCard({ property, layout = "grid" }: PropertyCardProps) {
       </div>
 
       {/* Content Body */}
-      <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-4">
         <div>
           {/* Location & APN */}
-          <div className="flex items-center justify-between text-xs text-brand-muted mb-1">
-            <span className="flex items-center gap-1 font-semibold text-brand-blue-dark truncate">
+          <div className="flex items-center justify-between gap-2 text-xs text-brand-muted mb-1">
+            <span className="flex items-center gap-1 font-semibold text-brand-blue-dark truncate min-w-0">
               <MapPin className="w-3.5 h-3.5 shrink-0 text-brand-blue" />
-              <span>{property.county}, {property.stateCode}</span>
+              <span className="truncate">{property.county}, {property.stateCode}</span>
             </span>
-            <span className="text-[11px] text-slate-400 font-mono">APN: {property.apn}</span>
+            <span className="hidden xs:block text-[11px] text-slate-400 font-mono shrink-0">
+              APN: {property.apn}
+            </span>
           </div>
 
           {/* Title */}
@@ -134,7 +136,7 @@ export function PropertyCard({ property, layout = "grid" }: PropertyCardProps) {
 
         {/* Financial Summary & Action */}
         <div className="pt-3 border-t border-brand-border">
-          <div className="grid grid-cols-2 gap-2 mb-3">
+          <div className="grid grid-cols-1 xs:grid-cols-2 gap-2 mb-3">
             {/* Financed monthly payment */}
             <div className="bg-brand-forest-light/60 p-2.5 rounded-xl border border-brand-forest/20">
               <span className="block text-[10px] uppercase font-bold text-brand-forest tracking-wider">
@@ -167,15 +169,15 @@ export function PropertyCard({ property, layout = "grid" }: PropertyCardProps) {
           <div className="flex items-center gap-2">
             <Link
               href={`/products/${property.handle}`}
-              className="flex-1 inline-flex items-center justify-center gap-1.5 bg-brand-ink hover:bg-brand-charcoal text-white text-xs font-semibold py-2.5 px-4 rounded-xl shadow-sm hover:shadow transition-all group-hover:bg-brand-forest"
+              className="flex-1 min-w-0 inline-flex items-center justify-center gap-1.5 bg-brand-ink hover:bg-brand-charcoal text-white text-xs font-semibold py-3 px-4 rounded-xl shadow-sm hover:shadow transition-all group-hover:bg-brand-forest"
             >
               <span>View Property</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3.5 h-3.5 shrink-0" />
             </Link>
 
             <button
               onClick={() => toggleCompareProperty(property.id)}
-              className={`p-2.5 rounded-xl border text-xs font-semibold transition-colors ${
+              className={`py-3 px-3 shrink-0 rounded-xl border text-xs font-semibold transition-colors ${
                 isComparing
                   ? "bg-brand-blue text-white border-brand-blue"
                   : "bg-white text-slate-600 hover:bg-brand-sand border-brand-border"

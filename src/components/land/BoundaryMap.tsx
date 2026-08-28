@@ -13,12 +13,12 @@ export function BoundaryMap({ property }: BoundaryMapProps) {
   const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${property.coordinates.lat},${property.coordinates.lng}`;
 
   return (
-    <div className="bg-white border border-brand-border rounded-card p-6 shadow-soft space-y-5">
+    <div className="bg-white border border-brand-border rounded-card p-5 sm:p-6 shadow-soft space-y-5">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-brand-border">
-        <div>
-          <h3 className="text-lg font-bold text-brand-ink flex items-center gap-2">
-            <MapPin className="w-5 h-5 text-brand-forest" />
-            <span>Interactive Parcel Map & Coordinates</span>
+        <div className="min-w-0">
+          <h3 className="text-lg font-bold text-brand-ink flex items-start gap-2">
+            <MapPin className="w-5 h-5 text-brand-forest shrink-0 mt-0.5" />
+            <span>Interactive Parcel Map &amp; Coordinates</span>
           </h3>
           <p className="text-xs text-brand-muted mt-0.5">
             GPS: {property.coordinates.lat.toFixed(5)}, {property.coordinates.lng.toFixed(5)}
@@ -29,16 +29,17 @@ export function BoundaryMap({ property }: BoundaryMapProps) {
           href={googleMapsUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-2 bg-brand-sand hover:bg-brand-sand-light text-brand-ink text-xs font-bold py-2 px-4 rounded-xl border border-brand-border transition-colors shadow-sm"
+          className="inline-flex shrink-0 items-center justify-center gap-2 bg-brand-sand hover:bg-brand-sand-light text-brand-ink text-xs font-bold py-3 px-4 rounded-xl border border-brand-border transition-colors shadow-sm"
         >
-          <Navigation className="w-4 h-4 text-brand-blue" />
-          <span>Get Driving Directions in Google Maps</span>
-          <ExternalLink className="w-3 h-3" />
+          <Navigation className="w-4 h-4 text-brand-blue shrink-0" />
+          <span className="sm:hidden">Driving Directions</span>
+          <span className="hidden sm:inline">Get Driving Directions in Google Maps</span>
+          <ExternalLink className="w-3 h-3 shrink-0" />
         </a>
       </div>
 
       {/* Map Embed */}
-      <div className="h-[420px] rounded-xl overflow-hidden border border-brand-border">
+      <div className="h-[280px] sm:h-[360px] lg:h-[420px] rounded-xl overflow-hidden border border-brand-border">
         <PropertyMap
           properties={[property]}
           selectedPropertyId={property.id}

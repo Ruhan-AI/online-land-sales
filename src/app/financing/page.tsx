@@ -18,14 +18,14 @@ export default function FinancingPage() {
 
   return (
     <div className="bg-brand-canvas min-h-screen py-10 sm:py-16">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 sm:space-y-16">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-4">
           <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-forest bg-brand-forest-light px-3 py-1 rounded-full">
             <ShieldCheck className="w-4 h-4 text-brand-forest" />
             <span>Guaranteed Seller Financing</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-brand-ink tracking-tight font-sans">
+          <h1 className="text-[1.75rem] leading-tight xs:text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-ink tracking-tight font-sans">
             Simple, Transparent Land Financing
           </h1>
           <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
@@ -34,23 +34,23 @@ export default function FinancingPage() {
         </div>
 
         {/* Standalone Interactive Calculator */}
-        <div className="bg-white rounded-3xl p-6 sm:p-10 border border-brand-border shadow-card space-y-8">
-          <div className="flex items-center justify-between pb-4 border-b border-brand-border">
-            <h2 className="text-xl font-bold text-brand-ink flex items-center gap-2">
-              <Calculator className="w-5 h-5 text-brand-forest" />
+        <div className="bg-white rounded-3xl p-5 sm:p-8 lg:p-10 border border-brand-border shadow-card space-y-6 sm:space-y-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-brand-border">
+            <h2 className="text-lg sm:text-xl font-bold text-brand-ink flex items-start gap-2">
+              <Calculator className="w-5 h-5 text-brand-forest shrink-0 mt-0.5" />
               <span>Interactive Loan Payment Calculator</span>
             </h2>
-            <span className="text-xs font-bold text-brand-forest bg-brand-forest-light px-2.5 py-1 rounded-full">
+            <span className="text-xs font-bold text-brand-forest bg-brand-forest-light px-2.5 py-1 rounded-full self-start shrink-0">
               0% Prepayment Penalty
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
             {/* Left Controls */}
             <div className="space-y-6">
               {/* Land Price */}
               <div className="space-y-2">
-                <div className="flex justify-between items-center text-xs font-bold text-brand-ink">
+                <div className="flex flex-wrap justify-between items-center gap-x-3 text-xs font-bold text-brand-ink">
                   <span>Target Land Price</span>
                   <span className="text-base text-brand-blue font-extrabold">{formatMoney(totalPrice)}</span>
                 </div>
@@ -61,13 +61,13 @@ export default function FinancingPage() {
                   step="500"
                   value={totalPrice}
                   onChange={(e) => setTotalPrice(Number(e.target.value))}
-                  className="w-full h-2 bg-brand-sand rounded-lg appearance-none cursor-pointer accent-brand-forest"
+                  className="w-full h-2 bg-brand-sand rounded-lg appearance-none cursor-pointer accent-brand-forest touch-pan-y"
                 />
               </div>
 
               {/* Down Payment */}
               <div className="space-y-2">
-                <div className="flex justify-between items-center text-xs font-bold text-brand-ink">
+                <div className="flex flex-wrap justify-between items-center gap-x-3 text-xs font-bold text-brand-ink">
                   <span>Down Payment</span>
                   <span className="text-base text-brand-forest font-extrabold">{formatMoney(downPayment)}</span>
                 </div>
@@ -78,22 +78,23 @@ export default function FinancingPage() {
                   step="50"
                   value={downPayment}
                   onChange={(e) => setDownPayment(Number(e.target.value))}
-                  className="w-full h-2 bg-brand-sand rounded-lg appearance-none cursor-pointer accent-brand-forest"
+                  className="w-full h-2 bg-brand-sand rounded-lg appearance-none cursor-pointer accent-brand-forest touch-pan-y"
                 />
               </div>
 
               {/* Term */}
               <div className="space-y-2">
-                <div className="flex justify-between items-center text-xs font-bold text-brand-ink">
+                <div className="flex flex-wrap justify-between items-center gap-x-3 text-xs font-bold text-brand-ink">
                   <span>Term Length</span>
                   <span className="text-sm text-brand-ink font-extrabold">{termMonths} Months ({termMonths / 12} Years)</span>
                 </div>
-                <div className="grid grid-cols-5 gap-1.5 text-xs font-bold">
+                {/* Six options — 3×2 on phones, one row from sm up */}
+                <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 sm:gap-2 text-xs font-bold">
                   {[12, 24, 36, 48, 60, 72].map((m) => (
                     <button
                       key={m}
                       onClick={() => setTermMonths(m)}
-                      className={`py-2 rounded-xl border transition-all ${
+                      className={`py-2.5 px-1 rounded-xl border transition-all ${
                         termMonths === m
                           ? "bg-brand-forest text-white border-brand-forest shadow-sm"
                           : "bg-brand-sand-light hover:bg-brand-sand text-slate-700 border-brand-border"
@@ -107,7 +108,7 @@ export default function FinancingPage() {
             </div>
 
             {/* Right Summary Card */}
-            <div className="bg-brand-sand-light/80 rounded-2xl p-6 border border-brand-border flex flex-col justify-between space-y-6">
+            <div className="bg-brand-sand-light/80 rounded-2xl p-5 sm:p-6 border border-brand-border flex flex-col justify-between space-y-6">
               <div className="space-y-4">
                 <span className="text-xs font-bold uppercase tracking-wider text-brand-forest block">
                   Calculated Monthly Payment:
@@ -147,13 +148,13 @@ export default function FinancingPage() {
         </div>
 
         {/* Fee & Transparent Pricing Schedule */}
-        <div className="bg-white rounded-3xl p-8 border border-brand-border shadow-soft space-y-6">
-          <h2 className="text-xl font-bold text-brand-ink">
+        <div className="bg-white rounded-3xl p-5 sm:p-8 border border-brand-border shadow-soft space-y-6">
+          <h2 className="text-lg sm:text-xl font-bold text-brand-ink">
             Transparent Fee Schedule — No Hidden Surprises
           </h2>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-xs text-left">
+          <div className="overflow-x-auto no-scrollbar touch-rail -mx-5 px-5 sm:mx-0 sm:px-0">
+            <table className="w-full min-w-[540px] text-xs text-left">
               <thead>
                 <tr className="border-b border-brand-border text-brand-muted uppercase font-bold">
                   <th className="pb-3">Fee Type</th>

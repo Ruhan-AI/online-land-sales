@@ -49,9 +49,10 @@ export function Accordion({
           >
             <button
               onClick={() => toggle(item.id)}
-              className="w-full flex items-center justify-between p-4 sm:p-5 text-left font-semibold text-brand-ink hover:bg-brand-sand-light/60 transition-colors"
+              className="w-full flex items-center justify-between gap-3 p-4 sm:p-5 text-left text-sm sm:text-base font-semibold text-brand-ink hover:bg-brand-sand-light/60 transition-colors"
+              aria-expanded={isOpen}
             >
-              <div className="flex items-center gap-3 pr-4">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 min-w-0">
                 <span>{item.title}</span>
                 {item.badge && (
                   <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-brand-sand text-brand-ink">

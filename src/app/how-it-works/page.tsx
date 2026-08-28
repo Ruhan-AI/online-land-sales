@@ -20,13 +20,13 @@ export default function HowItWorksPage() {
 
   return (
     <div className="bg-brand-canvas min-h-screen py-10 sm:py-16">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 sm:space-y-16">
         {/* Page Header */}
         <div className="text-center max-w-2xl mx-auto space-y-4">
           <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-blue bg-brand-blue-light px-3 py-1 rounded-full">
             <span>Direct Land Ownership</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-brand-ink tracking-tight font-sans">
+          <h1 className="text-[1.75rem] leading-tight xs:text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-ink tracking-tight font-sans">
             How Buying Land Works
           </h1>
           <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
@@ -36,7 +36,7 @@ export default function HowItWorksPage() {
 
         {/* 3 Step Interactive Timeline */}
         <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-brand-ink text-center">
+          <h2 className="text-xl sm:text-2xl font-bold text-brand-ink text-center">
             The 3-Step Purchase Process
           </h2>
 
@@ -74,7 +74,7 @@ export default function HowItWorksPage() {
         </div>
 
         {/* Guaranteed Seller Financing Breakdown */}
-        <div className="bg-gradient-to-br from-brand-ink via-brand-charcoal to-brand-ink text-white rounded-3xl p-8 sm:p-12 shadow-2xl border border-white/10 space-y-8">
+        <div className="bg-gradient-to-br from-brand-ink via-brand-charcoal to-brand-ink text-white rounded-3xl p-6 sm:p-10 lg:p-12 shadow-2xl border border-white/10 space-y-6 sm:space-y-8">
           <div className="max-w-2xl space-y-3">
             <span className="text-xs font-bold uppercase tracking-wider text-emerald-300 bg-brand-forest/40 px-3 py-1 rounded-full">
               Zero Credit Checks
@@ -108,9 +108,9 @@ export default function HowItWorksPage() {
         </div>
 
         {/* Deed Transfer & Legal Ownership */}
-        <div className="bg-white rounded-3xl p-8 border border-brand-border shadow-soft space-y-6">
-          <h2 className="text-2xl font-bold text-brand-ink flex items-center gap-2">
-            <Award className="w-6 h-6 text-brand-forest" />
+        <div className="bg-white rounded-3xl p-5 sm:p-8 border border-brand-border shadow-soft space-y-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-brand-ink flex items-start gap-2">
+            <Award className="w-6 h-6 text-brand-forest shrink-0 mt-0.5" />
             <span>How Deed Transfer & Title Recording Works</span>
           </h2>
 
@@ -133,7 +133,7 @@ export default function HowItWorksPage() {
 
         {/* FAQs */}
         <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-brand-ink text-center">
+          <h2 className="text-xl sm:text-2xl font-bold text-brand-ink text-center">
             Common Buying Process Questions
           </h2>
           <Accordion

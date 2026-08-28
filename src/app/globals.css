@@ -8,6 +8,13 @@
     --font-serif: "Source Serif 4", Georgia, serif;
   }
 
+  html {
+    /* Stop iOS/Android from re-flowing type on orientation change */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
   body {
     background-color: #FAFBF8;
     color: #102633;
@@ -21,25 +28,85 @@
     color: #102633;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
+
+  /* Never let media blow out a container on narrow screens */
+  img,
+  svg,
+  video,
+  canvas {
+    max-width: 100%;
+  }
+
+  /* Long unbroken strings (APNs, emails, URLs) must not force a page-wide scrollbar */
+  h1, h2, h3, p, li, td, th, a, span {
+    overflow-wrap: break-word;
+  }
+
 }
 
-/* Custom modern scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+/*
+ * iOS Safari auto-zooms whenever a focused form control renders below 16px.
+ * The design uses 12px controls, so bump them up on phones only — desktop keeps
+ * the compact sizing.
+ *
+ * The `:not([hidden])` is a specificity bump, not a filter: Tailwind v3 compiles
+ * `@layer` away into plain CSS, so a bare `select` (0,0,1) would lose to the
+ * `.text-xs` (0,1,0) utility these controls carry. (0,1,1) wins instead.
+ */
+@media (max-width: 767px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  select:not([hidden]),
+  textarea:not([hidden]) {
+    font-size: 16px;
+  }
 }
 
-::-webkit-scrollbar-track {
-  background: #F4EFE5;
+@layer utilities {
+  /* Respect the home-indicator / notch inset on fixed bottom bars */
+  .safe-area-bottom {
+    padding-bottom: calc(0.875rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .safe-area-inset-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* Horizontal rails (tab strips, thumbnail rows) scroll without a visible bar */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Momentum scrolling + snap for touch rails */
+  .touch-rail {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
 }
 
-::-webkit-scrollbar-thumb {
-  background: #5E82AE;
-  border-radius: 4px;
-}
+/* Custom modern scrollbar (desktop pointers only) */
+@media (pointer: fine) {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #43648E;
+  ::-webkit-scrollbar-track {
+    background: #F4EFE5;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #5E82AE;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #43648E;
+  }
 }
 
 /* Glassmorphism helpers */
@@ -73,6 +140,18 @@
   animation: pulse-subtle 3s ease-in-out infinite;
 }
 
+/* Users who ask for less motion get less motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-pulse-subtle,
+  .animate-bounce {
+    animation: none;
+  }
+}
+
 /* Leaflet map styling overrides */
 .leaflet-container {
   font-family: var(--font-manrope) !important;
@@ -90,4 +169,18 @@
 
 .leaflet-popup-content {
   margin: 8px !important;
+}
+
+/* Leaflet's default controls are too small to hit reliably with a thumb */
+@media (max-width: 767px) {
+  .leaflet-control-zoom a {
+    width: 34px !important;
+    height: 34px !important;
+    line-height: 34px !important;
+    font-size: 20px !important;
+  }
+
+  .leaflet-control-attribution {
+    font-size: 9px !important;
+  }
 }

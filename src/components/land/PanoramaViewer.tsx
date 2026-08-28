@@ -30,9 +30,10 @@ interface PanoramaViewerProps {
 
 export function PanoramaViewer({
   panorama,
-  className = "w-full h-[520px]",
+  className = "w-full h-[300px] sm:h-[420px] lg:h-[520px]",
 }: PanoramaViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
   const [isStarted, setIsStarted] = useState(true); // Auto-active for immediate viewing
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [activeHotspot, setActiveHotspot] = useState<LandHotspot | null>(null);
@@ -95,10 +96,20 @@ export function PanoramaViewer({
     } catch {}
   };
 
-  const handleWheel = (e: React.WheelEvent) => {
-    e.preventDefault();
-    setZoom((prev) => Math.max(0.8, Math.min(2.5, prev - e.deltaY * 0.0015)));
-  };
+  // React attaches wheel handlers passively, so preventDefault() there is a no-op
+  // (and logs a console error). Bind natively so wheel-zoom doesn't scroll the page.
+  useEffect(() => {
+    const node = viewportRef.current;
+    if (!node) return;
+
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      setZoom((prev) => Math.max(0.8, Math.min(2.5, prev - e.deltaY * 0.0015)));
+    };
+
+    node.addEventListener("wheel", onWheel, { passive: false });
+    return () => node.removeEventListener("wheel", onWheel);
+  }, []);
 
   const resetView = () => {
     setYaw(panorama.initialYaw ? (panorama.initialYaw * 180) / Math.PI : 0);
@@ -131,14 +142,16 @@ export function PanoramaViewer({
       ref={containerRef}
       className={`relative rounded-3xl overflow-hidden bg-slate-950 border border-brand-border select-none shadow-2xl ${className}`}
     >
-      {/* 360 Viewport Container */}
+      {/* 360 Viewport Container
+          `touch-none` is what makes drag-to-look work on a phone — without it the
+          browser claims the gesture and scrolls the page instead. */}
       <div
-        className="relative w-full h-full cursor-grab active:cursor-grabbing overflow-hidden"
+        ref={viewportRef}
+        className="relative w-full h-full cursor-grab active:cursor-grabbing overflow-hidden touch-none overscroll-contain"
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerUp}
-        onWheel={handleWheel}
       >
         {/* Seamless 360 Panorama Panoramic Image Background */}
         <div
@@ -169,9 +182,14 @@ export function PanoramaViewer({
               const isVisible = Math.abs(diff) < 55;
               if (!isVisible) return null;
 
-              const screenXPercent = 50 + (diff / 55) * 45;
+              // Keep the pill inside the frame and clear of the edge control stacks
+              const rawX = 50 + (diff / 55) * 45;
+              const screenXPercent = Math.max(22, Math.min(72, rawX));
               const hsPitchDeg = (hs.pitch * 180) / Math.PI;
-              const screenYPercent = 50 - (hsPitchDeg - pitch) * 1.2;
+              const screenYPercent = Math.max(
+                22,
+                Math.min(78, 50 - (hsPitchDeg - pitch) * 1.2)
+              );
 
               return (
                 <div
@@ -189,10 +207,10 @@ export function PanoramaViewer({
                       setActiveHotspot(hs);
                       setIsAutoRotating(false);
                     }}
-                    className="group flex items-center gap-1.5 bg-brand-ink/90 hover:bg-brand-forest text-white text-[11px] font-bold px-3 py-1.5 rounded-full border border-white/30 backdrop-blur-md shadow-2xl transition-all hover:scale-110 animate-bounce"
+                    className="group flex items-center gap-1.5 bg-brand-ink/90 hover:bg-brand-forest text-white text-[11px] font-bold px-3 py-2 rounded-full border border-white/30 backdrop-blur-md shadow-2xl transition-all hover:scale-110 animate-bounce whitespace-nowrap max-w-[45vw] sm:max-w-none"
                   >
-                    <MapPin className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>{hs.label}</span>
+                    <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    <span className="truncate">{hs.label}</span>
                   </button>
                 </div>
               );
@@ -201,8 +219,8 @@ export function PanoramaViewer({
         )}
 
         {/* Top Bar: Compass & Status */}
-        <div className="absolute top-4 left-4 z-30 flex items-center gap-2 pointer-events-none">
-          <div className="flex items-center gap-2 bg-brand-ink/85 backdrop-blur-md border border-white/20 text-white text-xs font-bold px-3.5 py-2 rounded-2xl shadow-xl">
+        <div className="absolute top-2.5 left-2.5 sm:top-4 sm:left-4 z-30 flex items-center gap-2 pointer-events-none">
+          <div className="flex items-center gap-2 bg-brand-ink/85 backdrop-blur-md border border-white/20 text-white text-[11px] sm:text-xs font-bold px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl shadow-xl">
             <Compass
               className="w-4 h-4 text-brand-blue transition-transform duration-75"
               style={{ transform: `rotate(${compassHeading}deg)` }}
@@ -212,17 +230,17 @@ export function PanoramaViewer({
             </span>
           </div>
 
-          <div className="hidden sm:flex items-center gap-1.5 bg-black/60 backdrop-blur-md text-white text-[11px] font-medium px-3 py-2 rounded-2xl border border-white/10">
+          <div className="hidden lg:flex items-center gap-1.5 bg-black/60 backdrop-blur-md text-white text-[11px] font-medium px-3 py-2 rounded-2xl border border-white/10">
             <Sparkles className="w-3.5 h-3.5 text-amber-300" />
             <span>Interactive 360° View</span>
           </div>
         </div>
 
         {/* Top Right Controls */}
-        <div className="absolute top-4 right-4 z-30 flex items-center gap-1.5">
+        <div className="absolute top-2.5 right-2.5 sm:top-4 sm:right-4 z-30 flex items-center gap-1 sm:gap-1.5">
           <button
             onClick={() => setIsAutoRotating(!isAutoRotating)}
-            className="p-2.5 rounded-xl bg-brand-ink/80 hover:bg-brand-ink text-white border border-white/20 backdrop-blur-md shadow-lg transition-colors"
+            className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-brand-ink/80 hover:bg-brand-ink text-white border border-white/20 backdrop-blur-md shadow-lg transition-colors"
             title={isAutoRotating ? "Pause auto-rotation" : "Play auto-rotation"}
           >
             {isAutoRotating ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
@@ -230,7 +248,7 @@ export function PanoramaViewer({
 
           <button
             onClick={resetView}
-            className="p-2.5 rounded-xl bg-brand-ink/80 hover:bg-brand-ink text-white border border-white/20 backdrop-blur-md shadow-lg transition-colors"
+            className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-brand-ink/80 hover:bg-brand-ink text-white border border-white/20 backdrop-blur-md shadow-lg transition-colors"
             title="Reset View"
           >
             <RotateCcw className="w-4 h-4" />
@@ -238,7 +256,7 @@ export function PanoramaViewer({
 
           <button
             onClick={toggleFullscreen}
-            className="p-2.5 rounded-xl bg-brand-ink/80 hover:bg-brand-ink text-white border border-white/20 backdrop-blur-md shadow-lg transition-colors"
+            className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-brand-ink/80 hover:bg-brand-ink text-white border border-white/20 backdrop-blur-md shadow-lg transition-colors"
             title="Toggle Fullscreen"
           >
             {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
@@ -246,17 +264,17 @@ export function PanoramaViewer({
         </div>
 
         {/* Right Side Zoom Controls */}
-        <div className="absolute right-4 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-1.5">
+        <div className="absolute right-2.5 sm:right-4 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-1 sm:gap-1.5">
           <button
             onClick={() => setZoom((prev) => Math.min(2.5, prev + 0.25))}
-            className="p-2.5 rounded-xl bg-brand-ink/80 hover:bg-brand-ink text-white border border-white/20 backdrop-blur-md shadow-lg transition-colors"
+            className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-brand-ink/80 hover:bg-brand-ink text-white border border-white/20 backdrop-blur-md shadow-lg transition-colors"
             title="Zoom in"
           >
             <ZoomIn className="w-4 h-4" />
           </button>
           <button
             onClick={() => setZoom((prev) => Math.max(0.8, prev - 0.25))}
-            className="p-2.5 rounded-xl bg-brand-ink/80 hover:bg-brand-ink text-white border border-white/20 backdrop-blur-md shadow-lg transition-colors"
+            className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-brand-ink/80 hover:bg-brand-ink text-white border border-white/20 backdrop-blur-md shadow-lg transition-colors"
             title="Zoom out"
           >
             <ZoomOut className="w-4 h-4" />
@@ -265,7 +283,7 @@ export function PanoramaViewer({
 
         {/* Bottom Hotspots Tray */}
         {panorama.hotspots && panorama.hotspots.length > 0 && (
-          <div className="absolute bottom-4 left-4 right-4 z-30 flex flex-wrap gap-2 justify-center">
+          <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-16 z-30 flex gap-2 justify-start sm:justify-center overflow-x-auto no-scrollbar touch-rail sm:flex-wrap sm:overflow-visible">
             {panorama.hotspots.map((hs) => (
               <button
                 key={hs.id}
@@ -276,9 +294,9 @@ export function PanoramaViewer({
                   setActiveHotspot(hs);
                   setIsAutoRotating(false);
                 }}
-                className="flex items-center gap-1.5 bg-brand-ink/90 hover:bg-brand-forest text-white text-xs font-semibold px-3.5 py-1.5 rounded-full border border-white/20 backdrop-blur-md shadow-xl transition-all hover:scale-105"
+                className="flex shrink-0 items-center gap-1.5 bg-brand-ink/90 hover:bg-brand-forest text-white text-[11px] sm:text-xs font-semibold px-3 sm:px-3.5 py-2 rounded-full border border-white/20 backdrop-blur-md shadow-xl transition-all hover:scale-105 whitespace-nowrap"
               >
-                <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+                <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                 <span>{hs.label}</span>
               </button>
             ))}
@@ -287,7 +305,7 @@ export function PanoramaViewer({
 
         {/* Active Hotspot Modal Card */}
         {activeHotspot && (
-          <div className="absolute top-16 left-4 right-4 sm:right-auto sm:w-80 z-40 bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-brand-border animate-in fade-in duration-150">
+          <div className="absolute top-14 sm:top-16 left-2.5 right-2.5 sm:left-4 sm:right-auto sm:w-80 z-40 bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-brand-border animate-in fade-in duration-150">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-2 text-xs font-bold text-brand-forest uppercase">
                 <MapPin className="w-4 h-4" />

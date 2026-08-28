@@ -11,10 +11,10 @@ interface MegaMenuProps {
 export function MegaMenu({ onClose }: MegaMenuProps) {
   return (
     <div
-      className="absolute top-full left-0 w-full bg-white border-b border-brand-border shadow-2xl py-8 px-6 z-40 animate-in fade-in-50 slide-in-from-top-2 duration-200"
+      className="absolute top-full left-0 w-full bg-white border-b border-brand-border shadow-2xl py-8 px-6 z-40 animate-in fade-in-50 slide-in-from-top-2 duration-200 max-h-[calc(100dvh-9rem)] overflow-y-auto"
       onMouseLeave={onClose}
     >
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 xl:gap-8">
         {/* Column 1: By State */}
         <div>
           <div className="flex items-center gap-2 text-brand-ink font-bold text-sm uppercase tracking-wider mb-4 pb-2 border-b border-brand-border">

@@ -6,14 +6,14 @@ import { Button } from "@/components/ui/Button";
 export default function GuaranteePage() {
   return (
     <div className="bg-brand-canvas min-h-screen py-10 sm:py-16">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 sm:space-y-16">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-4">
           <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-3.5 py-1 rounded-full">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
             <span>100% Peace of Mind Commitment</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-brand-ink tracking-tight font-sans">
+          <h1 className="text-[1.75rem] leading-tight xs:text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-ink tracking-tight font-sans">
             Our 90-Day Satisfaction Guarantee
           </h1>
           <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
@@ -22,9 +22,9 @@ export default function GuaranteePage() {
         </div>
 
         {/* 2 Core Protection Pillars */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
           {/* Pillar 1: Full Refund */}
-          <div className="bg-white rounded-3xl p-8 border-2 border-emerald-500/30 shadow-soft space-y-4">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 border-2 border-emerald-500/30 shadow-soft space-y-4">
             <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
               <RotateCcw className="w-6 h-6" />
             </div>
@@ -35,7 +35,7 @@ export default function GuaranteePage() {
           </div>
 
           {/* Pillar 2: 100% Equity Exchange */}
-          <div className="bg-white rounded-3xl p-8 border-2 border-brand-blue/30 shadow-soft space-y-4">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 border-2 border-brand-blue/30 shadow-soft space-y-4">
             <div className="w-12 h-12 rounded-2xl bg-brand-blue-light text-brand-blue flex items-center justify-center font-bold">
               <HeartHandshake className="w-6 h-6" />
             </div>
@@ -47,8 +47,8 @@ export default function GuaranteePage() {
         </div>
 
         {/* How to Request a Guarantee Claim */}
-        <div className="bg-brand-sand-light rounded-3xl p-8 sm:p-10 border border-brand-border space-y-6">
-          <h2 className="text-2xl font-bold text-brand-ink">
+        <div className="bg-brand-sand-light rounded-3xl p-6 sm:p-10 border border-brand-border space-y-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-brand-ink">
             How to Request an Exchange or Refund
           </h2>
           <div className="space-y-4 text-xs sm:text-sm text-slate-700 leading-relaxed">

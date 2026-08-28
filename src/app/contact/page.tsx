@@ -23,14 +23,14 @@ export default function ContactPage() {
 
   return (
     <div className="bg-brand-canvas min-h-screen py-10 sm:py-16">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-4">
           <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-blue bg-brand-blue-light px-3.5 py-1 rounded-full">
             <Phone className="w-4 h-4 text-brand-blue" />
             <span>Direct Land Specialists</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-brand-ink tracking-tight font-sans">
+          <h1 className="text-[1.75rem] leading-tight xs:text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-ink tracking-tight font-sans">
             We’re Here to Help You Find Land
           </h1>
           <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
@@ -38,10 +38,10 @@ export default function ContactPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           {/* Left Column: Direct Info & Hours */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-brand-border shadow-soft space-y-6">
+            <div className="bg-white rounded-3xl p-5 sm:p-8 border border-brand-border shadow-soft space-y-6">
               <h3 className="text-xl font-bold text-brand-ink">Contact Information</h3>
 
               <div className="space-y-4 text-xs sm:text-sm text-slate-700">
@@ -92,7 +92,7 @@ export default function ContactPage() {
           </div>
 
           {/* Right Column: Contact Message Form */}
-          <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-brand-border shadow-card">
+          <div className="lg:col-span-7 bg-white rounded-3xl p-5 sm:p-8 border border-brand-border shadow-card min-w-0">
             {submitted ? (
               <div className="py-12 text-center space-y-4 animate-in fade-in duration-300">
                 <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
@@ -120,7 +120,7 @@ export default function ContactPage() {
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="John Doe"
-                      className="w-full bg-brand-sand-light border border-brand-border rounded-xl p-3 text-xs focus:ring-2 focus:ring-brand-blue outline-none"
+                      className="w-full bg-brand-sand-light border border-brand-border rounded-xl p-3 text-xs sm:text-sm focus:ring-2 focus:ring-brand-blue outline-none"
                     />
                   </div>
 
@@ -134,7 +134,7 @@ export default function ContactPage() {
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       placeholder="(555) 000-0000"
-                      className="w-full bg-brand-sand-light border border-brand-border rounded-xl p-3 text-xs focus:ring-2 focus:ring-brand-blue outline-none"
+                      className="w-full bg-brand-sand-light border border-brand-border rounded-xl p-3 text-xs sm:text-sm focus:ring-2 focus:ring-brand-blue outline-none"
                     />
                   </div>
                 </div>
@@ -150,7 +150,7 @@ export default function ContactPage() {
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="john@example.com"
-                      className="w-full bg-brand-sand-light border border-brand-border rounded-xl p-3 text-xs focus:ring-2 focus:ring-brand-blue outline-none"
+                      className="w-full bg-brand-sand-light border border-brand-border rounded-xl p-3 text-xs sm:text-sm focus:ring-2 focus:ring-brand-blue outline-none"
                     />
                   </div>
 
@@ -163,7 +163,7 @@ export default function ContactPage() {
                       value={formData.propertyCode}
                       onChange={(e) => setFormData({ ...formData, propertyCode: e.target.value })}
                       placeholder="e.g. AZ-MOH-215-04"
-                      className="w-full bg-brand-sand-light border border-brand-border rounded-xl p-3 text-xs focus:ring-2 focus:ring-brand-blue outline-none"
+                      className="w-full bg-brand-sand-light border border-brand-border rounded-xl p-3 text-xs sm:text-sm focus:ring-2 focus:ring-brand-blue outline-none"
                     />
                   </div>
                 </div>
@@ -178,7 +178,7 @@ export default function ContactPage() {
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     placeholder="Tell us what state you're interested in, your target monthly budget, or questions about zoning..."
-                    className="w-full bg-brand-sand-light border border-brand-border rounded-xl p-3 text-xs focus:ring-2 focus:ring-brand-blue outline-none leading-relaxed"
+                    className="w-full bg-brand-sand-light border border-brand-border rounded-xl p-3 text-xs sm:text-sm focus:ring-2 focus:ring-brand-blue outline-none leading-relaxed"
                   />
                 </div>
 
@@ -190,7 +190,7 @@ export default function ContactPage() {
                       required
                       checked={formData.consent}
                       onChange={(e) => setFormData({ ...formData, consent: e.target.checked })}
-                      className="w-4 h-4 mt-0.5 rounded border-slate-300 text-brand-forest focus:ring-brand-forest"
+                      className="w-5 h-5 mt-px shrink-0 rounded border-slate-300 text-brand-forest focus:ring-brand-forest"
                     />
                     <span className="text-[11px] text-slate-500 leading-tight">
                       I consent to receive phone calls and text messages from Online Land Sales regarding property details. Reply STOP to opt out anytime.

@@ -11,7 +11,7 @@ export function PanoramaTeaser() {
   if (!panoProperty.panorama) return null;
 
   return (
-    <section className="py-16 sm:py-24 bg-brand-sand-light border-y border-brand-border">
+    <section className="py-12 sm:py-16 lg:py-24 bg-brand-sand-light border-y border-brand-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-3">

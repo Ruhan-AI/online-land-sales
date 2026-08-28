@@ -4,10 +4,10 @@ import { Compass, ShieldCheck, Phone, Mail, MapPin, ArrowUpRight } from "lucide-
 
 export function Footer() {
   return (
-    <footer className="bg-brand-ink text-white/90 pt-16 pb-12 border-t border-brand-border/20">
+    <footer className="bg-brand-ink text-white/90 pt-12 sm:pt-16 pb-10 sm:pb-12 border-t border-brand-border/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Trust Section */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-12 border-b border-white/10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 pb-10 sm:pb-12 border-b border-white/10">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 rounded-xl bg-brand-forest/20 flex items-center justify-center shrink-0 border border-brand-forest/30">
               <Compass className="w-6 h-6 text-emerald-400" />
@@ -58,7 +58,7 @@ export function Footer() {
         </div>
 
         {/* Middle Navigation Columns */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8 py-12 border-b border-white/10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 py-10 sm:py-12 border-b border-white/10">
           {/* Brand & Contact */}
           <div className="sm:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
@@ -73,15 +73,15 @@ export function Footer() {
               Making American land ownership affordable, transparent, and accessible to everyone through guaranteed direct seller financing.
             </p>
             <div className="space-y-2 text-xs text-slate-300 pt-2">
-              <p className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-brand-blue" />
+              <p className="flex items-start gap-2">
+                <Phone className="w-4 h-4 text-brand-blue shrink-0" />
                 <a href="tel:18005555263" className="hover:text-white font-medium">
                   (800) 555-LAND / (800) 555-5263
                 </a>
               </p>
-              <p className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-brand-blue" />
-                <a href="mailto:support@onlinelandsales.com" className="hover:text-white">
+              <p className="flex items-start gap-2">
+                <Mail className="w-4 h-4 text-brand-blue shrink-0" />
+                <a href="mailto:support@onlinelandsales.com" className="hover:text-white break-all">
                   support@onlinelandsales.com
                 </a>
               </p>
@@ -91,34 +91,34 @@ export function Footer() {
           {/* Quick Links */}
           <div className="space-y-3">
             <h5 className="font-bold text-sm text-white tracking-wider uppercase">Explore</h5>
-            <ul className="space-y-2 text-xs text-slate-400">
+            <ul className="space-y-1 text-xs text-slate-400">
               <li>
-                <Link href="/land" className="hover:text-white transition-colors">
+                <Link href="/land" className="block py-1.5 hover:text-white transition-colors">
                   All Available Land
                 </Link>
               </li>
               <li>
-                <Link href="/map" className="hover:text-white transition-colors">
+                <Link href="/map" className="block py-1.5 hover:text-white transition-colors">
                   Interactive Land Map
                 </Link>
               </li>
               <li>
-                <Link href="/how-it-works" className="hover:text-white transition-colors">
+                <Link href="/how-it-works" className="block py-1.5 hover:text-white transition-colors">
                   How Buying Works
                 </Link>
               </li>
               <li>
-                <Link href="/financing" className="hover:text-white transition-colors">
+                <Link href="/financing" className="block py-1.5 hover:text-white transition-colors">
                   Financing Calculator
                 </Link>
               </li>
               <li>
-                <Link href="/guarantee" className="hover:text-white transition-colors">
+                <Link href="/guarantee" className="block py-1.5 hover:text-white transition-colors">
                   90-Day Guarantee
                 </Link>
               </li>
               <li>
-                <Link href="/learning-center" className="hover:text-white transition-colors">
+                <Link href="/learning-center" className="block py-1.5 hover:text-white transition-colors">
                   Learning Center
                 </Link>
               </li>
@@ -128,29 +128,29 @@ export function Footer() {
           {/* By State */}
           <div className="space-y-3">
             <h5 className="font-bold text-sm text-white tracking-wider uppercase">Top States</h5>
-            <ul className="space-y-2 text-xs text-slate-400">
+            <ul className="space-y-1 text-xs text-slate-400">
               <li>
-                <Link href="/land?state=Arizona" className="hover:text-white transition-colors">
+                <Link href="/land?state=Arizona" className="block py-1.5 hover:text-white transition-colors">
                   Arizona Land For Sale
                 </Link>
               </li>
               <li>
-                <Link href="/land?state=Colorado" className="hover:text-white transition-colors">
+                <Link href="/land?state=Colorado" className="block py-1.5 hover:text-white transition-colors">
                   Colorado Mountain Lots
                 </Link>
               </li>
               <li>
-                <Link href="/land?state=Texas" className="hover:text-white transition-colors">
+                <Link href="/land?state=Texas" className="block py-1.5 hover:text-white transition-colors">
                   Texas Desert Acreage
                 </Link>
               </li>
               <li>
-                <Link href="/land?state=Florida" className="hover:text-white transition-colors">
+                <Link href="/land?state=Florida" className="block py-1.5 hover:text-white transition-colors">
                   Florida Lake Parcels
                 </Link>
               </li>
               <li>
-                <Link href="/land?state=Nevada" className="hover:text-white transition-colors">
+                <Link href="/land?state=Nevada" className="block py-1.5 hover:text-white transition-colors">
                   Nevada High Desert
                 </Link>
               </li>
@@ -160,25 +160,25 @@ export function Footer() {
           {/* Customer Support */}
           <div className="space-y-3">
             <h5 className="font-bold text-sm text-white tracking-wider uppercase">Buyers & Loans</h5>
-            <ul className="space-y-2 text-xs text-slate-400">
+            <ul className="space-y-1 text-xs text-slate-400">
               <li>
-                <Link href="/make-a-payment" className="text-brand-blue-light hover:text-white font-medium flex items-center gap-1">
+                <Link href="/make-a-payment" className="flex items-center gap-1 py-1.5 text-brand-blue-light hover:text-white font-medium">
                   <span>Make a Loan Payment</span>
                   <ArrowUpRight className="w-3 h-3" />
                 </Link>
               </li>
               <li>
-                <a href="https://onlinelandsales.com/account" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                <a href="https://onlinelandsales.com/account" target="_blank" rel="noopener noreferrer" className="block py-1.5 hover:text-white transition-colors">
                   Account Portal Login
                 </a>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-white transition-colors">
+                <Link href="/contact" className="block py-1.5 hover:text-white transition-colors">
                   Schedule a Consultation
                 </Link>
               </li>
               <li>
-                <Link href="/guarantee" className="hover:text-white transition-colors">
+                <Link href="/guarantee" className="block py-1.5 hover:text-white transition-colors">
                   Refund & Exchange Policy
                 </Link>
               </li>
@@ -192,8 +192,10 @@ export function Footer() {
             <strong className="text-slate-300">Disclaimer:</strong> Online Land Sales, LLC is a direct principal owner and seller of real property, not a real estate brokerage or lending bank. All property boundaries, GIS maps, elevation models, satellite overlays, and 360-degree virtual tour hotspots displayed on this website are approximate and intended for preliminary illustrative reference only. Prospective buyers are encouraged to perform their own due diligence, review official county recorded plats and surveys, and confirm buildability and zoning with relevant county jurisdictions.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-white/5 text-xs text-slate-400">
-            <p>© {new Date().getFullYear()} Online Land Sales, LLC. All rights reserved.</p>
-            <div className="flex items-center gap-6 text-slate-400">
+            <p className="text-center sm:text-left">
+              © {new Date().getFullYear()} Online Land Sales, LLC. All rights reserved.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-slate-400">
               <Link href="/guarantee" className="hover:text-white">
                 Terms of Service
               </Link>

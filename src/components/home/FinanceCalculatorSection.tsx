@@ -25,7 +25,7 @@ export function FinanceCalculatorSection() {
   ).slice(0, 2);
 
   return (
-    <section className="py-16 sm:py-24 bg-brand-sand-light border-y border-brand-border">
+    <section className="py-12 sm:py-16 lg:py-24 bg-brand-sand-light border-y border-brand-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="text-center max-w-2xl mx-auto space-y-3">
           <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-forest bg-brand-forest-light px-3 py-1 rounded-full">
@@ -40,9 +40,9 @@ export function FinanceCalculatorSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center max-w-6xl mx-auto">
           {/* Controls Panel */}
-          <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-brand-border shadow-card space-y-6">
+          <div className="lg:col-span-7 bg-white rounded-3xl p-5 sm:p-8 border border-brand-border shadow-card space-y-6">
             {/* Total Price Slider */}
             <div className="space-y-2">
               <div className="flex justify-between items-center text-sm font-bold text-brand-ink">
@@ -56,7 +56,7 @@ export function FinanceCalculatorSection() {
                 step="500"
                 value={totalPrice}
                 onChange={(e) => setTotalPrice(Number(e.target.value))}
-                className="w-full h-2 bg-brand-sand rounded-lg appearance-none cursor-pointer accent-brand-forest"
+                className="w-full h-2 bg-brand-sand rounded-lg appearance-none cursor-pointer accent-brand-forest touch-pan-y"
               />
               <div className="flex justify-between text-[11px] text-slate-400">
                 <span>$5,000</span>
@@ -78,7 +78,7 @@ export function FinanceCalculatorSection() {
                 step="50"
                 value={downPayment}
                 onChange={(e) => setDownPayment(Number(e.target.value))}
-                className="w-full h-2 bg-brand-sand rounded-lg appearance-none cursor-pointer accent-brand-forest"
+                className="w-full h-2 bg-brand-sand rounded-lg appearance-none cursor-pointer accent-brand-forest touch-pan-y"
               />
               <div className="flex justify-between text-[11px] text-slate-400">
                 <span>$100</span>
@@ -89,9 +89,9 @@ export function FinanceCalculatorSection() {
 
             {/* Term Months Slider */}
             <div className="space-y-2">
-              <div className="flex justify-between items-center text-sm font-bold text-brand-ink">
+              <div className="flex flex-wrap justify-between items-center gap-x-3 text-sm font-bold text-brand-ink">
                 <span>Loan Term</span>
-                <span className="text-base text-brand-ink font-extrabold">{termMonths} Months ({Math.round(termMonths / 12)} Yrs)</span>
+                <span className="text-sm sm:text-base text-brand-ink font-extrabold">{termMonths} Months ({Math.round(termMonths / 12)} Yrs)</span>
               </div>
               <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 text-xs font-bold">
                 {[24, 36, 48, 60, 72].map((m) => (
@@ -124,7 +124,7 @@ export function FinanceCalculatorSection() {
           </div>
 
           {/* Result Card */}
-          <div className="lg:col-span-5 bg-gradient-to-br from-brand-ink via-brand-charcoal to-brand-ink text-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-white/10 flex flex-col justify-between space-y-6">
+          <div className="lg:col-span-5 bg-gradient-to-br from-brand-ink via-brand-charcoal to-brand-ink text-white rounded-3xl p-5 sm:p-8 shadow-2xl border border-white/10 flex flex-col justify-between space-y-6">
             <div className="space-y-4">
               <div className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-emerald-300 bg-brand-forest/40 border border-brand-forest/50 px-3 py-1 rounded-full">
                 <DollarSign className="w-3.5 h-3.5" />
@@ -152,12 +152,12 @@ export function FinanceCalculatorSection() {
                       <Link
                         key={prop.id}
                         href={`/products/${prop.handle}`}
-                        className="flex items-center justify-between p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition-colors text-xs"
+                        className="flex items-center justify-between gap-3 p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition-colors text-xs"
                       >
-                        <span className="font-semibold text-white truncate max-w-[180px]">
+                        <span className="font-semibold text-white truncate min-w-0">
                           {prop.displayTitle}
                         </span>
-                        <span className="font-extrabold text-emerald-300">
+                        <span className="font-extrabold text-emerald-300 shrink-0">
                           {formatMoney(prop.defaultPlan.monthlyPayment)}/mo
                         </span>
                       </Link>
