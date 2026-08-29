@@ -4,8 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { LandProperty } from "@/types/land";
-import { formatMoney, formatAcres, getStatusBadge } from "@/lib/utils";
-import { Layers, MapPin, Maximize2, Sparkles, ArrowRight } from "lucide-react";
+import { formatMoney, formatAcres, getStatusBadge, imageOf } from "@/lib/utils";
+import { Sparkles, ArrowRight, X } from "lucide-react";
 
 interface PropertyMapProps {
   properties: LandProperty[];
@@ -61,11 +61,18 @@ export function PropertyMap({
       });
       mapInstanceRef.current = map;
 
-      // Base tile layer
+      // Base tile layers.
+      //
+      // CARTO's raster basemaps now require an API key and serve an
+      // "API KEY REQUIRED" watermark tile without one, so both layers come from
+      // Esri's keyless ArcGIS Online services. Topo is used rather than a plain
+      // street map because it carries contour lines, elevation markers and
+      // water features — the detail that actually matters when buying land.
       const streetLayer = L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
         {
-          attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
+          attribution:
+            'Tiles &copy; <a href="https://www.esri.com/">Esri</a> &mdash; Esri, HERE, Garmin, USGS, NGA',
           maxZoom: 19,
         }
       );
@@ -73,8 +80,9 @@ export function PropertyMap({
       const satelliteLayer = L.tileLayer(
         "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
         {
-          attribution: "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS",
-          maxZoom: 18,
+          attribution:
+            'Tiles &copy; <a href="https://www.esri.com/">Esri</a> &mdash; Source: Esri, Maxar, Earthstar Geographics, USDA, USGS',
+          maxZoom: 19,
         }
       );
 
@@ -87,7 +95,8 @@ export function PropertyMap({
       // Add custom SVG pins for each property
       markersRef.current = [];
       const validProperties = properties.filter(
-        (p) => p.coordinates && p.coordinates.lat && p.coordinates.lng
+        (p): p is typeof p & { coordinates: { lat: number; lng: number } } =>
+          !!p.coordinates && Number.isFinite(p.coordinates.lat) && Number.isFinite(p.coordinates.lng)
       );
 
       validProperties.forEach((prop) => {
@@ -96,9 +105,7 @@ export function PropertyMap({
           <div class="group relative flex items-center justify-center cursor-pointer transition-transform duration-200 ${
             isSelected ? "scale-125 z-30" : "hover:scale-110"
           }">
-            <div class="flex items-center gap-1 bg-brand-ink text-white text-[11px] font-extrabold px-2.5 py-1 rounded-full shadow-card border-2 ${
-              prop.isHotLot ? "border-brand-clay" : "border-white"
-            } whitespace-nowrap">
+            <div class="flex items-center gap-1 bg-brand-ink text-white text-[11px] font-extrabold px-2.5 py-1 rounded-full shadow-card border-2 border-white whitespace-nowrap">
               <span>$${prop.defaultPlan.monthlyPayment}/mo</span>
             </div>
             <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-brand-ink rotate-45 border-r border-b border-white"></div>
@@ -161,7 +168,11 @@ export function PropertyMap({
   }, [properties, mapLayer, selectedPropertyId]);
 
   return (
-    <div className={`relative rounded-card overflow-hidden border border-brand-border shadow-soft bg-slate-100 ${className}`}>
+    // `isolate` creates a stacking context so Leaflet's panes and our own
+    // z-[400] overlays stay inside the map and can't paint over the sticky header.
+    <div
+      className={`relative isolate rounded-card overflow-hidden border border-brand-border shadow-soft bg-slate-100 ${className}`}
+    >
       {/* Map Container */}
       <div ref={mapContainerRef} className="w-full h-full" />
 
@@ -169,18 +180,18 @@ export function PropertyMap({
       <div className="absolute top-2.5 right-2.5 sm:top-4 sm:right-4 z-[400] flex items-center bg-white/90 backdrop-blur-md rounded-xl p-1 shadow-card border border-brand-border">
         <button
           onClick={() => setMapLayer("terrain")}
-          className={`text-[11px] sm:text-xs font-bold px-2.5 sm:px-3 py-2 rounded-lg transition-colors whitespace-nowrap ${
+          className={`text-[11px] sm:text-xs font-bold px-2.5 sm:px-3 py-2 min-h-[40px] rounded-lg transition-colors whitespace-nowrap ${
             mapLayer === "terrain"
               ? "bg-brand-ink text-white shadow-sm"
               : "text-slate-600 hover:text-brand-ink"
           }`}
         >
-          <span className="sm:hidden">Map</span>
-          <span className="hidden sm:inline">Street / Map</span>
+          <span className="sm:hidden">Terrain</span>
+          <span className="hidden sm:inline">Terrain Map</span>
         </button>
         <button
           onClick={() => setMapLayer("satellite")}
-          className={`text-[11px] sm:text-xs font-bold px-2.5 sm:px-3 py-2 rounded-lg transition-colors whitespace-nowrap ${
+          className={`text-[11px] sm:text-xs font-bold px-2.5 sm:px-3 py-2 min-h-[40px] rounded-lg transition-colors whitespace-nowrap ${
             mapLayer === "satellite"
               ? "bg-brand-ink text-white shadow-sm"
               : "text-slate-600 hover:text-brand-ink"
@@ -197,12 +208,12 @@ export function PropertyMap({
           <div className="flex gap-3">
             <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden shrink-0 border border-brand-border">
               <Image
-                src={activeProperty.primaryImage}
+                src={imageOf(activeProperty.primaryImage)}
                 alt={activeProperty.title}
                 fill
                 className="object-cover"
               />
-              {activeProperty.panorama && (
+              {activeProperty.hasStreetView && (
                 <span className="absolute top-1 left-1 bg-black/70 text-white text-[9px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5">
                   <Sparkles className="w-2.5 h-2.5 text-amber-300" />
                   360°
@@ -220,7 +231,7 @@ export function PropertyMap({
                   aria-label="Close property preview"
                   className="flex items-center justify-center -mt-1 -mr-1 w-8 h-8 shrink-0 text-slate-400 hover:text-brand-ink text-xs font-bold"
                 >
-                  ✕
+                  <X className="w-4 h-4" />
                 </button>
               </div>
 

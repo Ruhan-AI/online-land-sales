@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   Compass,
@@ -45,27 +46,37 @@ export function Header() {
   }, [isMobileMenuOpen]);
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-brand-border shadow-soft transition-all">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-brand-border shadow-soft transition-all">
       <UtilityBar />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-2 h-16 sm:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 sm:gap-3 group min-w-0 lg:shrink-0">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl bg-gradient-to-br from-brand-ink via-brand-forest to-brand-blue flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
-              <Compass className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-            </div>
+          <Link
+            href="/"
+            className="flex items-center gap-2 sm:gap-3 group min-w-0 lg:shrink-0"
+            aria-label="Online Land Sales — home"
+          >
+            <Image
+              src="/brand/ols-mark.png"
+              alt=""
+              aria-hidden="true"
+              width={512}
+              height={512}
+              priority
+              className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl border border-brand-border object-contain shadow-sm group-hover:scale-105 transition-transform"
+            />
             <div className="flex flex-col min-w-0">
               <div className="flex items-center gap-1.5 min-w-0">
                 <span className="font-extrabold text-base sm:text-lg lg:text-xl leading-tight tracking-tight text-brand-ink font-sans truncate lg:overflow-visible lg:whitespace-nowrap">
                   Online Land Sales
                 </span>
-                <span className="hidden xl:inline-block shrink-0 text-[10px] font-bold uppercase tracking-wider bg-brand-forest/10 text-brand-forest px-1.5 py-0.5 rounded">
-                  Est. 2004
+                <span className="hidden xl:inline-block shrink-0 text-[10px] font-bold uppercase tracking-wider bg-brand-blue/10 text-brand-blue-dark px-1.5 py-0.5 rounded">
+                  LLC
                 </span>
               </div>
               <span className="hidden sm:block text-[11px] font-medium text-brand-muted tracking-wide truncate">
-                Guaranteed Seller Financing
+                Owner Financed Land
               </span>
             </div>
           </Link>
@@ -80,7 +91,7 @@ export function Header() {
               <button
                 onClick={() => setIsMegaMenuOpen(!isMegaMenuOpen)}
                 className={cn(
-                  "flex items-center gap-1.5 py-2 px-2.5 xl:px-3.5 rounded-xl hover:bg-brand-sand transition-colors whitespace-nowrap",
+                  "flex items-center gap-1.5 py-2 px-2.5 xl:px-3 rounded-xl hover:bg-brand-sand transition-colors whitespace-nowrap",
                   (isMegaMenuOpen || pathname === "/land") && "bg-brand-sand text-brand-blue"
                 )}
               >
@@ -97,7 +108,7 @@ export function Header() {
             <Link
               href="/map"
               className={cn(
-                "flex items-center gap-1.5 py-2 px-2.5 xl:px-3.5 rounded-xl hover:bg-brand-sand transition-colors whitespace-nowrap",
+                "flex items-center gap-1.5 py-2 px-2.5 xl:px-3 rounded-xl hover:bg-brand-sand transition-colors whitespace-nowrap",
                 pathname === "/map" && "bg-brand-sand text-brand-blue font-bold"
               )}
             >
@@ -108,7 +119,7 @@ export function Header() {
             <Link
               href="/how-it-works"
               className={cn(
-                "py-2 px-2.5 xl:px-3.5 rounded-xl hover:bg-brand-sand transition-colors whitespace-nowrap",
+                "py-2 px-2.5 xl:px-3 rounded-xl hover:bg-brand-sand transition-colors whitespace-nowrap",
                 pathname === "/how-it-works" && "bg-brand-sand text-brand-blue font-bold"
               )}
             >
@@ -118,7 +129,7 @@ export function Header() {
             <Link
               href="/financing"
               className={cn(
-                "py-2 px-2.5 xl:px-3.5 rounded-xl hover:bg-brand-sand transition-colors whitespace-nowrap",
+                "py-2 px-2.5 xl:px-3 rounded-xl hover:bg-brand-sand transition-colors whitespace-nowrap",
                 pathname === "/financing" && "bg-brand-sand text-brand-blue font-bold"
               )}
             >
@@ -128,18 +139,18 @@ export function Header() {
             <Link
               href="/guarantee"
               className={cn(
-                "py-2 px-2.5 xl:px-3.5 rounded-xl hover:bg-brand-sand transition-colors whitespace-nowrap",
+                "py-2 px-2.5 xl:px-3 rounded-xl hover:bg-brand-sand transition-colors whitespace-nowrap",
                 pathname === "/guarantee" && "bg-brand-sand text-brand-blue font-bold"
               )}
             >
               <span className="xl:hidden">Guarantee</span>
-              <span className="hidden xl:inline">90-Day Guarantee</span>
+              <span className="hidden xl:inline">Our Guarantee</span>
             </Link>
 
             <Link
               href="/learning-center"
               className={cn(
-                "py-2 px-2.5 xl:px-3.5 rounded-xl hover:bg-brand-sand transition-colors whitespace-nowrap",
+                "py-2 px-2.5 xl:px-3 rounded-xl hover:bg-brand-sand transition-colors whitespace-nowrap",
                 pathname.startsWith("/learning-center") && "bg-brand-sand text-brand-blue font-bold"
               )}
             >
@@ -242,7 +253,7 @@ export function Header() {
               onClick={() => setIsMobileMenuOpen(false)}
               className="block py-3 px-3 rounded-lg hover:bg-brand-sand active:bg-brand-sand"
             >
-              90-Day Money-Back Guarantee
+              Our guarantee
             </Link>
             <Link
               href="/learning-center"
@@ -269,11 +280,11 @@ export function Header() {
 
           <div className="pt-4 border-t border-brand-border flex flex-col gap-3">
             <a
-              href="tel:18005555263"
+              href="tel:15304664094"
               className="flex items-center justify-center gap-2 bg-brand-sand text-brand-ink font-semibold py-3 rounded-xl hover:bg-brand-sand-light transition-colors text-sm"
             >
               <Phone className="w-4 h-4 text-brand-blue" />
-              <span>Call / Text (800) 555-LAND</span>
+              <span>Call / Text (530) 466-4094</span>
             </a>
           </div>
         </div>

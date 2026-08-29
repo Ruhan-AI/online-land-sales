@@ -21,15 +21,15 @@ export function PropertyGrid({ properties, onResetFilters }: PropertyGridProps) 
   const sortedProperties = [...properties].sort((a, b) => {
     switch (sortBy) {
       case "price_asc":
-        return a.cashPrice - b.cashPrice;
+        return (a.cashPrice ?? Infinity) - (b.cashPrice ?? Infinity);
       case "price_desc":
-        return b.cashPrice - a.cashPrice;
+        return (b.cashPrice ?? -Infinity) - (a.cashPrice ?? -Infinity);
       case "monthly_asc":
         return a.defaultPlan.monthlyPayment - b.defaultPlan.monthlyPayment;
       case "acres_desc":
-        return b.acres - a.acres;
+        return (b.acres ?? -Infinity) - (a.acres ?? -Infinity);
       case "acres_asc":
-        return a.acres - b.acres;
+        return (a.acres ?? Infinity) - (b.acres ?? Infinity);
       default:
         return (a.featuredPriority || 99) - (b.featuredPriority || 99);
     }
@@ -54,11 +54,11 @@ export function PropertyGrid({ properties, onResetFilters }: PropertyGridProps) 
               aria-label="Sort properties"
               className="w-full sm:w-auto min-w-0 bg-brand-sand-light border border-brand-border rounded-xl px-3 py-2 text-xs font-semibold text-brand-ink focus:outline-none focus:ring-2 focus:ring-brand-blue"
             >
-              <option value="recommended">Recommended / Featured</option>
-              <option value="monthly_asc">Lowest Monthly Payment</option>
-              <option value="price_asc">Lowest Total Price</option>
-              <option value="acres_desc">Largest Acreage</option>
-              <option value="acres_asc">Smallest Acreage</option>
+              <option value="recommended">Recommended</option>
+              <option value="monthly_asc">Lowest monthly</option>
+              <option value="price_asc">Lowest price</option>
+              <option value="acres_desc">Largest acreage</option>
+              <option value="acres_asc">Smallest acreage</option>
             </select>
           </div>
 

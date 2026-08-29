@@ -59,13 +59,13 @@ function ConfirmationContent() {
           <div className="border-t border-brand-border pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-600">
             <div className="flex items-center gap-2 font-medium">
               <ShieldCheck className="w-4 h-4 text-brand-forest shrink-0" />
-              <span>90-Day 100% Satisfaction Guarantee Active</span>
+              <span>Covered by our money-back guarantee</span>
             </div>
 
             <div className="flex items-center gap-4">
-              <a href="tel:18005555263" className="font-bold text-brand-ink hover:text-brand-blue flex items-center gap-1">
+              <a href="tel:15304664094" className="font-bold text-brand-ink hover:text-brand-blue flex items-center gap-1">
                 <Phone className="w-3.5 h-3.5 text-brand-blue" />
-                <span>(800) 555-LAND</span>
+                <span>(530) 466-4094</span>
               </a>
             </div>
           </div>

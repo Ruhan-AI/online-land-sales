@@ -3,6 +3,8 @@
 import React from "react";
 import { RotateCcw, Sparkles, Filter } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { STATES_IN_INVENTORY } from "@/lib/data/properties";
+import { BROWSABLE_USES, useLabel } from "@/lib/useIcons";
 
 export interface FilterState {
   state: string;
@@ -87,11 +89,11 @@ export function PropertyFilters({
           className="w-full text-xs font-semibold bg-brand-sand-light border border-brand-border rounded-xl p-2.5 text-brand-ink focus:outline-none focus:ring-2 focus:ring-brand-blue"
         >
           <option value="all">All States</option>
-          <option value="Arizona">Arizona (Mohave, Apache)</option>
-          <option value="Colorado">Colorado (Costilla)</option>
-          <option value="Texas">Texas (Presidio)</option>
-          <option value="Florida">Florida (Putnam)</option>
-          <option value="Nevada">Nevada (Elko)</option>
+          {STATES_IN_INVENTORY.map(({ state, count }) => (
+            <option key={state} value={state}>
+              {state} ({count})
+            </option>
+          ))}
         </select>
       </div>
 
@@ -166,11 +168,12 @@ export function PropertyFilters({
           onChange={(e) => update("use", e.target.value)}
           className="w-full text-xs font-semibold bg-brand-sand-light border border-brand-border rounded-xl p-2.5 text-brand-ink focus:outline-none focus:ring-2 focus:ring-brand-blue"
         >
-          <option value="all">Any Goal / Use</option>
-          <option value="homestead">🏡 Off-Grid Homesteading</option>
-          <option value="camping_rv">🏕️ Camping & RV Living</option>
-          <option value="investment">📈 Long-Term Investment</option>
-          <option value="build_later">🔨 Build Later / Cabin</option>
+          <option value="all">Any goal / use</option>
+          {BROWSABLE_USES.map((u) => (
+            <option key={u} value={u}>
+              {useLabel(u)}
+            </option>
+          ))}
         </select>
       </div>
 

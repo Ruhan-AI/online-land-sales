@@ -22,8 +22,8 @@ export const FAQS: FAQItem[] = [
   },
   {
     category: "Guarantees & Title",
-    question: "What is your 90-Day 100% Satisfaction Guarantee?",
-    answer: "We want you to love your land. If for any reason you visit your property or decide it's not the right fit within 90 days of purchase, you can exchange 100% of your principal payments toward any other parcel in our active inventory, or request a full refund.",
+    question: "What is your money-back guarantee?",
+    answer: "We guarantee your complete satisfaction with Online Land Sales LLC properties, or your money back. On owner-financed agreements the refund covers the principal you have paid, not the interest and fees. Contact us before you buy and we will walk you through the exact terms in your purchase agreement.",
   },
   {
     category: "Guarantees & Title",

@@ -29,9 +29,9 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Online Land Sales | Guaranteed Seller Financed Land Across the USA",
+  title: "Online Land Sales | Owner Financed Land Across the USA",
   description:
-    "Buy affordable U.S. vacant land with guaranteed seller financing, no credit checks, low down payments, transparent terms, and a 90-day money-back guarantee. Founded 2004.",
+    "Owner financed U.S. land, sold direct since 2004. No credit check, low down payment, fixed monthly payments.",
   keywords: [
     "land for sale",
     "seller financed land",
@@ -44,9 +44,9 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Online Land Sales, LLC" }],
   openGraph: {
-    title: "Online Land Sales | Guaranteed Seller Financed Land Across the USA",
+    title: "Online Land Sales | Owner Financed Land Across the USA",
     description:
-      "Buy affordable U.S. vacant land with guaranteed seller financing, no credit checks, and a 90-day money-back guarantee.",
+      "Owner financed U.S. land, sold direct since 2004. No credit check and fixed monthly payments.",
     url: "https://onlinelandsales.com",
     siteName: "Online Land Sales",
     images: [

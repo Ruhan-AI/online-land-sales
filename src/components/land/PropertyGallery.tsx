@@ -3,9 +3,10 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { LandProperty } from "@/types/land";
-import { PanoramaViewer } from "./PanoramaViewer";
+import { StreetViewEmbed } from "./StreetViewEmbed";
 import { BoundaryMap } from "./BoundaryMap";
 import { Camera, Sparkles, MapPin, FileText, ChevronLeft, ChevronRight } from "lucide-react";
+import { imageOf } from "@/lib/utils";
 
 interface PropertyGalleryProps {
   property: LandProperty;
@@ -33,7 +34,7 @@ export function PropertyGallery({ property }: PropertyGalleryProps) {
           <span>Photos ({images.length})</span>
         </button>
 
-        {property.panorama && (
+        {property.panorama?.streetView && (
           <button
             onClick={() => setActiveTab("360")}
             className={`flex shrink-0 items-center gap-1.5 py-2.5 px-3 sm:px-4 rounded-xl transition-all whitespace-nowrap ${
@@ -68,7 +69,7 @@ export function PropertyGallery({ property }: PropertyGalleryProps) {
           {/* Main Selected Image */}
           <div className="relative aspect-[16/10] sm:aspect-[16/9] w-full rounded-2xl overflow-hidden bg-slate-900 border border-brand-border shadow-soft group">
             <Image
-              src={images[selectedPhotoIndex]}
+              src={imageOf(images[selectedPhotoIndex])}
               alt={`${property.title} - Photo ${selectedPhotoIndex + 1}`}
               fill
               priority
@@ -123,7 +124,7 @@ export function PropertyGallery({ property }: PropertyGalleryProps) {
                   }`}
                 >
                   <Image
-                    src={img}
+                    src={imageOf(img)}
                     alt={`Thumbnail ${index + 1}`}
                     fill
                     className="object-cover"
@@ -135,10 +136,16 @@ export function PropertyGallery({ property }: PropertyGalleryProps) {
         </div>
       )}
 
-      {activeTab === "360" && property.panorama && (
-        <PanoramaViewer
-          panorama={property.panorama}
+      {activeTab === "360" && property.panorama?.streetView && (
+        <StreetViewEmbed
+          embedUrl={property.panorama.streetView.embedUrl}
+          label={property.panorama.label}
+          lat={property.panorama.streetView.lat}
+          lng={property.panorama.streetView.lng}
+          heading={property.panorama.streetView.heading}
+          posterImage={property.primaryImage}
           className="w-full h-[300px] sm:h-[420px] lg:h-[520px]"
+          eager
         />
       )}
 

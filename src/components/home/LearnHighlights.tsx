@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ARTICLES } from "@/lib/data/articles";
-import { BookOpen, ArrowRight, Clock } from "lucide-react";
+import { ArrowRight, Clock } from "lucide-react";
 
 export function LearnHighlights() {
   return (
@@ -10,10 +10,6 @@ export function LearnHighlights() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-blue bg-brand-blue-light px-3 py-1 rounded-full">
-              <BookOpen className="w-4 h-4 text-brand-blue" />
-              <span>Educational Hub</span>
-            </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-brand-ink tracking-tight font-sans">
               Learn Before You Buy
             </h2>

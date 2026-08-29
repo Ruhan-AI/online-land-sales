@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Phone, Mail, Clock, MapPin, Send, CheckCircle2, ShieldCheck } from "lucide-react";
+import { Phone, Mail, Clock, Send, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
 export default function ContactPage() {
@@ -26,10 +26,6 @@ export default function ContactPage() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-4">
-          <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-blue bg-brand-blue-light px-3.5 py-1 rounded-full">
-            <Phone className="w-4 h-4 text-brand-blue" />
-            <span>Direct Land Specialists</span>
-          </div>
           <h1 className="text-[1.75rem] leading-tight xs:text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-ink tracking-tight font-sans">
             We’re Here to Help You Find Land
           </h1>
@@ -51,8 +47,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <span className="text-[11px] font-bold text-slate-400 uppercase block">Phone / Text</span>
-                    <a href="tel:18005555263" className="font-extrabold text-brand-ink hover:text-brand-blue text-base">
-                      (800) 555-LAND
+                    <a href="tel:15304664094" className="font-extrabold text-brand-ink hover:text-brand-blue text-base">
+                      (530) 466-4094
                     </a>
                     <span className="text-xs text-slate-500 block">Toll-free across the USA</span>
                   </div>
@@ -64,8 +60,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <span className="text-[11px] font-bold text-slate-400 uppercase block">Email Support</span>
-                    <a href="mailto:support@onlinelandsales.com" className="font-bold text-brand-ink hover:text-brand-blue">
-                      support@onlinelandsales.com
+                    <a href="mailto:service@onlinelandsales.com" className="font-bold text-brand-ink hover:text-brand-blue">
+                      service@onlinelandsales.com
                     </a>
                   </div>
                 </div>
@@ -85,7 +81,7 @@ export default function ContactPage() {
               <div className="p-4 rounded-2xl bg-brand-sand-light border border-brand-border space-y-1 text-xs">
                 <span className="font-bold text-brand-ink block">Direct Land Owner & Seller</span>
                 <span className="text-slate-600 leading-relaxed block">
-                  Online Land Sales, LLC • In business since 2004 with 55,000+ acres sold.
+                  Online Land Sales, LLC — selling U.S. land direct since 2004.
                 </span>
               </div>
             </div>

@@ -14,28 +14,31 @@ export interface ParcelBoundary {
   coordinates: [number, number][][]; // Array of GeoJSON lat/lng rings
 }
 
-export interface LandHotspot {
-  id: string;
-  label: string;
-  type: "access_road" | "power_line" | "boundary_corner" | "mountain_view" | "water_feature" | "scene_jump";
-  yaw: number; // horizontal angle in radians / degrees
-  pitch: number; // vertical angle
-  description?: string;
-  targetSceneId?: string;
+/**
+ * A Google Street View 360° vantage point, parsed out of the
+ * `google.com/maps/embed?pb=...` iframe published on the live store.
+ */
+export interface StreetViewData {
+  /** Google panorama id, e.g. "9j-t9qMkx-hmF1BSCjzNqA". */
+  panoId: string;
+  lat: number;
+  lng: number;
+  /** Compass heading in degrees. */
+  heading: number;
+  /** Vertical pitch in degrees. */
+  pitch: number;
+  /** Field-of-view factor from the embed (`!5f`). */
+  fov?: number;
+  /** The full embed URL, used verbatim as the iframe src. */
+  embedUrl: string;
 }
 
 export interface PanoramaData {
   id: string;
+  /** Vantage-point caption, e.g. the subdivision entrance or nearest town. */
   label: string;
-  panoramaUrl: string;
-  posterImage: string;
-  initialYaw?: number;
-  initialPitch?: number;
-  northOffset?: number; // Compass calibration
-  capturedAt: string;
-  weatherNote?: string;
-  hotspots?: LandHotspot[];
-  altDescription: string;
+  /** Present when the listing has a Google Street View 360° tour. */
+  streetView?: StreetViewData;
 }
 
 export interface LandDocument {
@@ -54,12 +57,18 @@ export interface FinancingPlan {
   badge?: string;
   downPayment: number;
   monthlyPayment: number;
-  termMonths: number;
-  interestRate: number; // e.g., 8.9% or 0%
-  docFee: number;
-  estimatedMonthlyTax: number;
-  totalFinancedPrice: number;
-  amountDueToday: number; // downPayment + docFee
+  /** Undefined when the listing doesn't state a term. */
+  termMonths?: number;
+  interestRate?: number; // e.g., 9% APR
+  docFee?: number;
+  estimatedMonthlyTax?: number;
+  /** The seller's stated total property price. */
+  totalFinancedPrice?: number;
+  amountDueToday: number;
+  /** True when the variant bills the full purchase price at checkout ("100%" tier). */
+  isFullPayment?: boolean;
+  /** True when checkout collects a bid rather than a fixed down payment. */
+  isAuctionBid?: boolean;
   earlyPayoffDiscountNote?: string;
 }
 
@@ -70,10 +79,11 @@ export interface LandProperty {
   title: string;
   displayTitle: string;
   shortSummary: string;
-  fullDescription: string;
+  fullDescription?: string;
   status: PropertyStatus;
   saleType: SaleType;
   featuredPriority?: number;
+  /** Reserved — we have no demand data, so nothing is currently flagged. */
   isHotLot?: boolean;
   
   // Location
@@ -81,84 +91,105 @@ export interface LandProperty {
   stateCode: string; // "AZ", "TX", etc.
   county: string; // "Mohave County", etc.
   subdivision?: string;
-  nearestTown: string;
-  distanceToTownMiles: number;
-  coordinates: Coordinates;
+  nearestTown?: string;
+  distanceToTownMiles?: number;
+  /** Absent for the few listings that publish neither GPS nor a map embed. */
+  coordinates?: Coordinates;
   accessPointCoordinates?: Coordinates;
   boundaryGeoJson?: ParcelBoundary;
 
   // Parcel & Specs
-  acres: number;
-  apn: string; // Assessor's Parcel Number
-  legalDescription: string;
+  //
+  // NOTE: fields below are optional because the live catalog does not publish
+  // them for every parcel. Anything we cannot source from the real listing is
+  // left undefined and hidden in the UI rather than filled with a placeholder.
+  acres?: number;
+  /** Seller's own parcel reference (Shopify SKU). Not a county APN. */
+  parcelRef?: string;
+  /** County Assessor's Parcel Number — only set when the listing publishes one. */
+  apn?: string;
+  legalDescription?: string;
   lotBlockUnit?: string;
-  elevationFeet: number;
-  annualTaxes: number;
-  taxYear: number;
-  hoaPoaFeeAnnual: number;
+  elevationFeet?: number;
+  annualTaxes?: number;
+  taxYear?: number;
+  hoaPoaFeeAnnual?: number;
   hoaPoaName?: string;
-  zoning: string;
-  zoningDescription: string;
-  timeToBuild: string; // "No time limit", "1 year after permit", etc.
-  
+  zoning?: string;
+  zoningDescription?: string;
+  timeToBuild?: string; // "No time limit", "1 year after permit", etc.
+
   // Physical Characteristics
-  terrain: TerrainType;
-  roadAccess: RoadAccessType;
-  roadSurfaceNotes: string;
+  terrain?: TerrainType;
+  roadAccess?: RoadAccessType;
+  roadSurfaceNotes?: string;
   intendedUses: IntendedUse[];
   hasAdjoiningLotsAvailable?: boolean;
 
-  // Utilities Status
-  utilities: {
-    power: "available_at_street" | "solar_recommended" | "generator_off_grid" | "nearby" | "none";
-    water: "well_needed" | "water_haul_tank" | "city_tap_available" | "cistern";
-    sewer: "septic_needed" | "city_sewer" | "composting_outhouse";
-    gas: "propane_tank" | "natural_gas";
-    cellSignal: "strong_4g_5g" | "moderate" | "satellite_recommended";
-    notes: string;
-    verifiedDate: string;
+  // Utilities Status — `summary` is the seller's own free-text line.
+  utilities?: {
+    power?: "available_at_street" | "solar_recommended" | "generator_off_grid" | "nearby" | "none";
+    water?: "well_needed" | "water_haul_tank" | "city_tap_available" | "cistern";
+    sewer?: "septic_needed" | "city_sewer" | "composting_outhouse";
+    gas?: "propane_tank" | "natural_gas";
+    cellSignal?: "strong_4g_5g" | "moderate" | "satellite_recommended";
+    /** Verbatim "Utilities:" line from the listing. */
+    summary?: string;
+    notes?: string;
+    verifiedDate?: string;
   };
 
   // Pricing & Financing
-  cashPrice: number;
+  /** Seller's published "Sales Price". Absent on a handful of listings. */
+  cashPrice?: number;
   cashDiscountPercentage?: number;
-  financedPrice: number;
+  financedPrice?: number;
   defaultPlan: FinancingPlan;
   alternativePlans?: FinancingPlan[];
-  docFee: number;
-  
+  docFee?: number;
+  /** e.g. 10 for "10% DISCOUNT ON REMAINING BALANCE IF PAID EARLY". */
+  earlyPayoffDiscountPercent?: number;
+
   // Guarantees & Terms
-  guaranteeSummary: string; // e.g. "90-Day 100% Money Back Guarantee"
-  contractDeliveryHours: 24 | 48;
+  guaranteeSummary?: string;
+  contractDeliveryHours?: 24 | 48;
 
   // Media
-  primaryImage: string;
+  primaryImage?: string;
   galleryImages: string[];
   panorama?: PanoramaData;
+  /** True when a Google Street View 360° tour exists (also present on light card records). */
+  hasStreetView?: boolean;
   videoUrl?: string;
 
-  // Due Diligence Documents
-  documents: LandDocument[];
-  countyContact: {
-    assessorPhone: string;
-    planningPhone: string;
-    recorderPhone: string;
-    countyWebsite: string;
+  // Due Diligence Documents — only populated when the seller actually
+  // publishes downloadable files for the parcel.
+  documents?: LandDocument[];
+  countyContact?: {
+    assessorPhone?: string;
+    planningPhone?: string;
+    recorderPhone?: string;
+    countyWebsite?: string;
   };
-  
+
   // Nearby Highlights
-  nearbyHighlights: {
+  nearbyHighlights?: {
     name: string;
     type: "national_park" | "lake_river" | "town" | "highway" | "airport";
-    distanceMiles: number;
+    distanceMiles?: number;
     description: string;
   }[];
 
-  // Specific FAQs
-  faqs: {
+  // Parcel-specific FAQs lifted from the listing's own Q:/A: copy.
+  faqs?: {
     question: string;
     answer: string;
   }[];
 
-  lastVerifiedAt: string;
+  /** Shopify `updated_at` — when the source listing last changed. */
+  lastVerifiedAt?: string;
+  /** The seller's title exactly as published on the store. */
+  sourceTitle?: string;
+  /** Canonical listing on the live store. */
+  sourceUrl?: string;
 }

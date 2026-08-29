@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { X, Trash2, ShieldCheck, ArrowRight, Lock, CheckCircle2 } from "lucide-react";
 import { useStore } from "@/lib/store";
-import { formatMoney, formatAcres } from "@/lib/utils";
+import { formatMoney, formatAcres, imageOf } from "@/lib/utils";
 import { createShopifyCheckout } from "@/lib/shopify";
 import { Button } from "@/components/ui/Button";
 
@@ -98,7 +98,7 @@ export function CartDrawer() {
                   <div className="flex gap-3">
                     <div className="relative w-20 h-20 rounded-xl overflow-hidden shrink-0 border border-brand-border">
                       <Image
-                        src={item.property.primaryImage}
+                        src={imageOf(item.property.primaryImage)}
                         alt={item.property.title}
                         fill
                         className="object-cover"
@@ -202,7 +202,7 @@ export function CartDrawer() {
                       </Link>{" "}
                       and acknowledge the{" "}
                       <strong className="text-brand-ink font-semibold">
-                        90-Day 100% Satisfaction Guarantee
+                        money-back guarantee
                       </strong>
                       .
                     </span>

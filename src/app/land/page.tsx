@@ -80,10 +80,10 @@ function LandCatalogContent() {
     if (filters.maxMonthly && p.defaultPlan.monthlyPayment > Number(filters.maxMonthly)) {
       return false;
     }
-    if (filters.minAcres && p.acres < Number(filters.minAcres)) {
+    if (filters.minAcres && (p.acres ?? -Infinity) < Number(filters.minAcres)) {
       return false;
     }
-    if (filters.maxAcres && p.acres > Number(filters.maxAcres)) {
+    if (filters.maxAcres && (p.acres ?? Infinity) > Number(filters.maxAcres)) {
       return false;
     }
     if (filters.use !== "all" && !p.intendedUses.includes(filters.use as any)) {
@@ -92,10 +92,10 @@ function LandCatalogContent() {
     if (filters.roadAccess !== "all" && p.roadAccess !== filters.roadAccess) {
       return false;
     }
-    if (filters.hasPower && p.utilities.power !== "available_at_street") {
+    if (filters.hasPower && p.utilities?.power !== "available_at_street") {
       return false;
     }
-    if (filters.has360 && !p.panorama) {
+    if (filters.has360 && !p.hasStreetView) {
       return false;
     }
     return true;
@@ -111,7 +111,7 @@ function LandCatalogContent() {
               {filters.state !== "all" ? `${filters.state} Land For Sale` : "All Available Land"}
             </h1>
             <p className="text-xs sm:text-sm text-brand-muted">
-              Guaranteed seller financing on every parcel • 0% bank credit checks • 90-day money-back guarantee
+              Owner financed, no credit check. Browse every parcel we currently have available.
             </p>
           </div>
 

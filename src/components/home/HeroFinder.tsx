@@ -4,17 +4,9 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Search,
-  MapPin,
-  DollarSign,
-  Mountain,
-  Sparkles,
-  ShieldCheck,
-  ArrowRight,
-  Compass,
-} from "lucide-react";
+import { Search, MapPin, DollarSign, Mountain, Sparkles, Compass } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { PROPERTIES, STATES_IN_INVENTORY } from "@/lib/data/properties";
 
 export function HeroFinder() {
   const router = useRouter();
@@ -50,21 +42,17 @@ export function HeroFinder() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Hero Copy */}
-        <div className="text-center max-w-3xl mx-auto space-y-4 sm:space-y-6">
-          <div className="inline-flex items-center gap-2 bg-brand-forest/30 border border-brand-forest/50 backdrop-blur-md text-emerald-300 text-[11px] sm:text-xs font-bold px-3 sm:px-4 py-1.5 rounded-full shadow-lg">
-            <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>Guaranteed Seller Financing • 0% Bank Credit Checks</span>
-          </div>
-
+        <div className="text-center max-w-3xl mx-auto space-y-4 sm:space-y-5">
           <h1 className="text-[2rem] leading-[1.1] xs:text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white sm:leading-tight font-sans text-balance">
-            Own Land Without <br className="hidden sm:inline" />
-            <span className="bg-gradient-to-r from-emerald-300 via-brand-blue-light to-amber-200 bg-clip-text text-transparent">
-              the Bank.
-            </span>
+            Buy land directly,
+            <br className="hidden sm:inline" />{" "}
+            <span className="text-emerald-300">pay monthly.</span>
           </h1>
 
           <p className="text-sm sm:text-base lg:text-lg text-slate-300 font-normal leading-relaxed max-w-2xl mx-auto">
-            Discover affordable acreage across the American West & Florida with low down payments, transparent monthly terms, and our 90-day money-back guarantee.
+            {PROPERTIES.length} parcels across {STATES_IN_INVENTORY.length}{" "}
+            states, financed by us directly — no credit check, and a fixed
+            monthly payment.
           </p>
         </div>
 
@@ -73,8 +61,8 @@ export function HeroFinder() {
           <form onSubmit={handleSearch} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
             {/* State */}
             <div className="space-y-1.5">
-              <label className="flex items-center gap-1 text-[11px] font-extrabold uppercase tracking-wider text-slate-500">
-                <MapPin className="w-3.5 h-3.5 text-brand-blue" />
+              <label className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                <MapPin className="w-3.5 h-3.5 shrink-0 text-slate-400" />
                 <span>Location / State</span>
               </label>
               <select
@@ -83,18 +71,18 @@ export function HeroFinder() {
                 className="w-full text-xs font-bold bg-brand-sand-light border border-brand-border rounded-xl p-3 text-brand-ink focus:outline-none focus:ring-2 focus:ring-brand-blue cursor-pointer"
               >
                 <option value="all">All States</option>
-                <option value="Arizona">Arizona</option>
-                <option value="Colorado">Colorado</option>
-                <option value="Texas">Texas</option>
-                <option value="Florida">Florida</option>
-                <option value="Nevada">Nevada</option>
+                {STATES_IN_INVENTORY.map(({ state, count }) => (
+                  <option key={state} value={state}>
+                    {state} ({count})
+                  </option>
+                ))}
               </select>
             </div>
 
             {/* Monthly Budget */}
             <div className="space-y-1.5">
-              <label className="flex items-center gap-1 text-[11px] font-extrabold uppercase tracking-wider text-slate-500">
-                <DollarSign className="w-3.5 h-3.5 text-brand-forest" />
+              <label className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                <DollarSign className="w-3.5 h-3.5 shrink-0 text-slate-400" />
                 <span>Max Monthly Budget</span>
               </label>
               <select
@@ -112,8 +100,8 @@ export function HeroFinder() {
 
             {/* Acreage */}
             <div className="space-y-1.5">
-              <label className="flex items-center gap-1 text-[11px] font-extrabold uppercase tracking-wider text-slate-500">
-                <Mountain className="w-3.5 h-3.5 text-brand-clay" />
+              <label className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                <Mountain className="w-3.5 h-3.5 shrink-0 text-slate-400" />
                 <span>Minimum Acreage</span>
               </label>
               <select
@@ -129,16 +117,16 @@ export function HeroFinder() {
               </select>
             </div>
 
-            {/* Submit Button */}
+            {/* Submit — label stays on one line at every width */}
             <div>
               <Button
                 variant="forest"
                 size="lg"
                 type="submit"
-                className="w-full justify-center shadow-lg font-extrabold text-sm py-3.5 tracking-wide"
+                className="w-full justify-center shadow-lg font-bold whitespace-nowrap"
                 icon={<Search className="w-4 h-4" />}
               >
-                Search Available Land
+                Search land
               </Button>
             </div>
           </form>
@@ -146,7 +134,7 @@ export function HeroFinder() {
           {/* Quick Filter Links */}
           <div className="mt-4 pt-3 border-t border-brand-border/60 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-xs text-slate-600">
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-              <span className="font-bold text-slate-400">Popular:</span>
+              <span className="font-semibold text-slate-400">Popular:</span>
               <Link
                 href="/land?maxMonthly=175"
                 className="py-1.5 hover:text-brand-forest font-semibold underline"
@@ -182,7 +170,7 @@ export function HeroFinder() {
               className="py-1.5 font-bold text-brand-blue hover:underline flex items-center gap-1"
             >
               <Compass className="w-3.5 h-3.5 shrink-0" />
-              <span>Or Explore On Map</span>
+              <span>Browse the map</span>
             </Link>
           </div>
         </div>

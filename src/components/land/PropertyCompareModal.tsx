@@ -7,7 +7,7 @@ import { X, Trash2, CheckCircle2, ArrowRight } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 import { useStore } from "@/lib/store";
 import { PROPERTIES } from "@/lib/data/properties";
-import { formatMoney, formatAcres, getRoadAccessLabel, getUtilitySummary } from "@/lib/utils";
+import { formatMoney, formatAcres, getRoadAccessLabel, getUtilitySummary, imageOf } from "@/lib/utils";
 
 export function PropertyCompareModal() {
   const { comparePropertyIds, toggleCompareProperty, clearCompare, isCompareModalOpen, setIsCompareModalOpen } = useStore();
@@ -54,7 +54,7 @@ export function PropertyCompareModal() {
                     <th key={prop.id} className="p-2 sm:p-3 font-bold text-brand-ink w-48 sm:w-56">
                       <div className="relative aspect-[4/3] rounded-xl overflow-hidden mb-2 border border-brand-border">
                         <Image
-                          src={prop.primaryImage}
+                          src={imageOf(prop.primaryImage)}
                           alt={prop.title}
                           fill
                           className="object-cover"
@@ -157,7 +157,7 @@ export function PropertyCompareModal() {
                   <td className="p-2 sm:p-3 font-semibold text-slate-600">360° Virtual Tour</td>
                   {comparedProperties.map((prop) => (
                     <td key={prop.id} className="p-2 sm:p-3">
-                      {prop.panorama ? (
+                      {prop.hasStreetView ? (
                         <span className="text-brand-forest font-bold flex items-center gap-1">
                           <CheckCircle2 className="w-4 h-4" /> Available
                         </span>

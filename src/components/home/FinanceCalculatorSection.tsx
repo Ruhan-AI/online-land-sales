@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { PROPERTIES } from "@/lib/data/properties";
 import { formatMoney, calculateMonthlyPayment } from "@/lib/utils";
-import { Calculator, DollarSign, ArrowRight, ShieldCheck, CheckCircle2 } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
 export function FinanceCalculatorSection() {
@@ -28,15 +28,11 @@ export function FinanceCalculatorSection() {
     <section className="py-12 sm:py-16 lg:py-24 bg-brand-sand-light border-y border-brand-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="text-center max-w-2xl mx-auto space-y-3">
-          <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-forest bg-brand-forest-light px-3 py-1 rounded-full">
-            <Calculator className="w-4 h-4 text-brand-forest" />
-            <span>Budget-First Financing</span>
-          </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-brand-ink tracking-tight font-sans">
             Calculate Your Custom Monthly Payment
           </h2>
           <p className="text-sm text-slate-600">
-            Slide the controls to match your ideal down payment and term. Every single parcel comes with guaranteed approval.
+            Adjust the price, down payment and term to see what the monthly payment works out to.
           </p>
         </div>
 
@@ -98,7 +94,7 @@ export function FinanceCalculatorSection() {
                   <button
                     key={m}
                     onClick={() => setTermMonths(m)}
-                    className={`py-2 px-3 rounded-xl border transition-all ${
+                    className={`py-2.5 px-2 sm:px-3 min-h-[40px] rounded-xl border transition-all ${
                       termMonths === m
                         ? "bg-brand-forest text-white border-brand-forest font-extrabold shadow-sm"
                         : "bg-brand-sand-light hover:bg-brand-sand text-slate-700 border-brand-border"
@@ -126,10 +122,6 @@ export function FinanceCalculatorSection() {
           {/* Result Card */}
           <div className="lg:col-span-5 bg-gradient-to-br from-brand-ink via-brand-charcoal to-brand-ink text-white rounded-3xl p-5 sm:p-8 shadow-2xl border border-white/10 flex flex-col justify-between space-y-6">
             <div className="space-y-4">
-              <div className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-emerald-300 bg-brand-forest/40 border border-brand-forest/50 px-3 py-1 rounded-full">
-                <DollarSign className="w-3.5 h-3.5" />
-                <span>Your Estimated Payment</span>
-              </div>
 
               <div>
                 <div className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">

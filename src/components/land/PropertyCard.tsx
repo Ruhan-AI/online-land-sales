@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Heart, Sparkles, MapPin, Zap, CheckCircle2, ArrowRight, ShieldCheck } from "lucide-react";
 import { LandProperty } from "@/types/land";
-import { formatMoney, formatAcres, getStatusBadge, getRoadAccessLabel, getUtilitySummary } from "@/lib/utils";
+import { formatMoney, formatAcres, getStatusBadge, getRoadAccessLabel, getUtilitySummary, imageOf } from "@/lib/utils";
 import { useStore } from "@/lib/store";
 import { Badge } from "@/components/ui/Badge";
 
@@ -34,7 +34,7 @@ export function PropertyCard({ property, layout = "grid" }: PropertyCardProps) {
         }`}
       >
         <Image
-          src={property.primaryImage}
+          src={imageOf(property.primaryImage)}
           alt={property.title}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -52,13 +52,7 @@ export function PropertyCard({ property, layout = "grid" }: PropertyCardProps) {
             {statusBadge.label}
           </span>
 
-          {property.isHotLot && (
-            <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-brand-clay text-white shadow-sm flex items-center gap-1">
-              🔥 Hot Lot
-            </span>
-          )}
-
-          {property.panorama && (
+          {property.hasStreetView && (
             <span className="text-[11px] font-bold px-2 py-1 rounded-full bg-brand-ink/80 text-white border border-white/20 shadow-sm backdrop-blur-md flex items-center gap-1">
               <Sparkles className="w-3 h-3 text-amber-300" />
               <span>360° Tour</span>
@@ -102,9 +96,11 @@ export function PropertyCard({ property, layout = "grid" }: PropertyCardProps) {
               <MapPin className="w-3.5 h-3.5 shrink-0 text-brand-blue" />
               <span className="truncate">{property.county}, {property.stateCode}</span>
             </span>
-            <span className="hidden xs:block text-[11px] text-slate-400 font-mono shrink-0">
-              APN: {property.apn}
-            </span>
+            {property.acres != null && (
+              <span className="hidden xs:block text-[11px] text-slate-400 font-mono shrink-0">
+                {formatAcres(property.acres)}
+              </span>
+            )}
           </div>
 
           {/* Title */}
@@ -137,32 +133,51 @@ export function PropertyCard({ property, layout = "grid" }: PropertyCardProps) {
         {/* Financial Summary & Action */}
         <div className="pt-3 border-t border-brand-border">
           <div className="grid grid-cols-1 xs:grid-cols-2 gap-2 mb-3">
-            {/* Financed monthly payment */}
-            <div className="bg-brand-forest-light/60 p-2.5 rounded-xl border border-brand-forest/20">
-              <span className="block text-[10px] uppercase font-bold text-brand-forest tracking-wider">
-                Guaranteed Terms
-              </span>
-              <span className="text-base font-extrabold text-brand-forest tracking-tight">
-                {formatMoney(property.defaultPlan.monthlyPayment)}
-                <span className="text-xs font-normal text-slate-600">/mo</span>
-              </span>
-              <span className="block text-[10px] text-slate-500 mt-0.5">
-                {formatMoney(property.defaultPlan.downPayment)} down payment
-              </span>
-            </div>
+            {/* Owner-financed monthly payment */}
+            {property.defaultPlan.monthlyPayment > 0 ? (
+              <div className="bg-brand-forest-light/60 p-2.5 rounded-xl border border-brand-forest/20">
+                <span className="block text-[10px] uppercase font-bold text-brand-forest tracking-wider">
+                  Owner Financed
+                </span>
+                <span className="text-base font-extrabold text-brand-forest tracking-tight">
+                  {formatMoney(property.defaultPlan.monthlyPayment)}
+                  <span className="text-xs font-normal text-slate-600">/mo</span>
+                </span>
+                <span className="block text-[10px] text-slate-500 mt-0.5">
+                  {property.defaultPlan.isFullPayment
+                    ? `${formatMoney(property.defaultPlan.amountDueToday)} at checkout`
+                    : property.defaultPlan.downPayment > 0
+                      ? `${formatMoney(property.defaultPlan.downPayment)} down`
+                      : "$0 down"}
+                </span>
+              </div>
+            ) : (
+              <div className="bg-brand-sand-light p-2.5 rounded-xl border border-brand-border">
+                <span className="block text-[10px] uppercase font-bold text-brand-muted tracking-wider">
+                  Cash Only
+                </span>
+                <span className="text-base font-extrabold text-brand-ink tracking-tight">
+                  {formatMoney(property.cashPrice)}
+                </span>
+              </div>
+            )}
 
-            {/* Discounted cash price */}
-            <div className="bg-brand-sand-light p-2.5 rounded-xl border border-brand-border">
-              <span className="block text-[10px] uppercase font-bold text-brand-muted tracking-wider">
-                Discounted Cash
-              </span>
-              <span className="text-base font-extrabold text-brand-ink tracking-tight">
-                {formatMoney(property.cashPrice)}
-              </span>
-              <span className="block text-[10px] text-brand-forest font-semibold mt-0.5">
-                Save 20% on Cash
-              </span>
-            </div>
+            {/* Seller's stated total property price */}
+            {property.cashPrice != null && property.defaultPlan.monthlyPayment > 0 && (
+              <div className="bg-brand-sand-light p-2.5 rounded-xl border border-brand-border">
+                <span className="block text-[10px] uppercase font-bold text-brand-muted tracking-wider">
+                  Property Price
+                </span>
+                <span className="text-base font-extrabold text-brand-ink tracking-tight">
+                  {formatMoney(property.cashPrice)}
+                </span>
+                {property.defaultPlan.termMonths ? (
+                  <span className="block text-[10px] text-slate-500 mt-0.5">
+                    over {property.defaultPlan.termMonths} months
+                  </span>
+                ) : null}
+              </div>
+            )}
           </div>
 
           {/* Footer Actions */}

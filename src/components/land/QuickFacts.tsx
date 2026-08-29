@@ -1,165 +1,155 @@
 import React from "react";
 import { LandProperty } from "@/types/land";
 import { formatAcres, formatSqFt, formatMoney, getRoadAccessLabel } from "@/lib/utils";
-import {
-  MapPin,
-  FileText,
-  Mountain,
-  Compass,
-  Zap,
-  Droplet,
-  Home,
-  Clock,
-  Shield,
-  DollarSign,
-} from "lucide-react";
+import { FileText, Zap, ExternalLink } from "lucide-react";
 
 interface QuickFactsProps {
   property: LandProperty;
 }
 
+interface Fact {
+  label: string;
+  value: React.ReactNode;
+  hint?: string;
+  wide?: boolean;
+}
+
+/**
+ * Renders only the attributes the seller actually publishes for this parcel.
+ * Anything missing from the source listing is omitted entirely rather than
+ * shown as an empty or invented value.
+ */
 export function QuickFacts({ property }: QuickFactsProps) {
+  const facts: Fact[] = [];
+
+  if (property.apn) {
+    facts.push({
+      label: "Parcel Number (APN)",
+      value: <span className="font-mono break-all">{property.apn}</span>,
+    });
+  } else if (property.parcelRef) {
+    facts.push({
+      label: "Seller Parcel Ref",
+      value: <span className="font-mono break-all">{property.parcelRef}</span>,
+      hint: "Seller's own reference, not a county APN",
+    });
+  }
+
+  if (property.acres != null) {
+    facts.push({
+      label: "Size & Area",
+      value: `${formatAcres(property.acres)} (${formatSqFt(property.acres)})`,
+    });
+  }
+
+  facts.push({
+    label: "County & State",
+    value: `${property.county}, ${property.state}`,
+  });
+
+  if (property.nearestTown) {
+    facts.push({ label: "Nearest Town", value: property.nearestTown });
+  }
+
+  if (property.zoning) {
+    facts.push({ label: "Zoning", value: property.zoning });
+  }
+
+  if (property.annualTaxes != null) {
+    facts.push({
+      label: "Annual Property Taxes",
+      value: `${formatMoney(property.annualTaxes)} / year`,
+    });
+  }
+
+  if (property.roadSurfaceNotes || property.roadAccess) {
+    facts.push({
+      label: "Road Access",
+      value: property.roadSurfaceNotes || getRoadAccessLabel(property.roadAccess),
+      wide: true,
+    });
+  }
+
+  if (property.coordinates) {
+    const { lat, lng } = property.coordinates;
+    facts.push({
+      label: "GPS Coordinates",
+      value: (
+        <a
+          href={`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 font-mono text-brand-blue hover:underline"
+        >
+          {lat.toFixed(6)}, {lng.toFixed(6)}
+          <ExternalLink className="w-3 h-3 shrink-0" />
+        </a>
+      ),
+      wide: true,
+    });
+  }
+
+  if (property.legalDescription) {
+    facts.push({
+      label: "Legal Description",
+      value: (
+        <span className="font-normal text-slate-600 text-[11px] leading-relaxed block">
+          {property.legalDescription}
+        </span>
+      ),
+      wide: true,
+    });
+  }
+
+  const utilitySummary = property.utilities?.summary;
+
   return (
     <div className="bg-white border border-brand-border rounded-card p-5 sm:p-6 shadow-soft space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-3 pb-4 border-b border-brand-border">
         <h3 className="text-lg font-bold text-brand-ink flex items-center gap-2">
           <FileText className="w-5 h-5 text-brand-blue shrink-0" />
-          <span>Quick Property Facts</span>
+          <span>Parcel Facts</span>
         </h3>
-        <span className="text-xs text-brand-muted shrink-0">
-          Last Verified: {property.lastVerifiedAt}
-        </span>
+        {property.lastVerifiedAt && (
+          <span className="text-xs text-brand-muted shrink-0">
+            Listing updated: {property.lastVerifiedAt}
+          </span>
+        )}
       </div>
 
-      {/* Grid of Attributes */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-5 text-xs">
-        {/* APN */}
-        <div className="p-3 rounded-xl bg-brand-canvas border border-brand-border space-y-1">
-          <span className="text-slate-400 font-bold uppercase tracking-wider block text-[10px]">
-            Parcel ID / APN
-          </span>
-          <span className="font-bold text-brand-ink text-sm font-mono break-all">{property.apn}</span>
-        </div>
-
-        {/* Acreage */}
-        <div className="p-3 rounded-xl bg-brand-canvas border border-brand-border space-y-1">
-          <span className="text-slate-400 font-bold uppercase tracking-wider block text-[10px]">
-            Size & Area
-          </span>
-          <span className="font-bold text-brand-ink text-sm">
-            {formatAcres(property.acres)} ({formatSqFt(property.acres)})
-          </span>
-        </div>
-
-        {/* Location */}
-        <div className="p-3 rounded-xl bg-brand-canvas border border-brand-border space-y-1">
-          <span className="text-slate-400 font-bold uppercase tracking-wider block text-[10px]">
-            County & State
-          </span>
-          <span className="font-bold text-brand-ink text-sm">
-            {property.county}, {property.state}
-          </span>
-        </div>
-
-        {/* Elevation */}
-        <div className="p-3 rounded-xl bg-brand-canvas border border-brand-border space-y-1">
-          <span className="text-slate-400 font-bold uppercase tracking-wider block text-[10px]">
-            Elevation
-          </span>
-          <span className="font-bold text-brand-ink text-sm">
-            {property.elevationFeet.toLocaleString()} Feet above sea level
-          </span>
-        </div>
-
-        {/* Zoning */}
-        <div className="p-3 rounded-xl bg-brand-canvas border border-brand-border space-y-1 sm:col-span-2">
-          <span className="text-slate-400 font-bold uppercase tracking-wider block text-[10px]">
-            Zoning & Permitted Use
-          </span>
-          <span className="font-bold text-brand-ink text-sm block">{property.zoning}</span>
-          <span className="text-slate-600 block text-[11px] leading-relaxed">
-            {property.zoningDescription}
-          </span>
-        </div>
-
-        {/* Road Access */}
-        <div className="p-3 rounded-xl bg-brand-canvas border border-brand-border space-y-1 sm:col-span-2">
-          <span className="text-slate-400 font-bold uppercase tracking-wider block text-[10px]">
-            Road Access & Terrain
-          </span>
-          <span className="font-bold text-brand-ink text-sm block">
-            {getRoadAccessLabel(property.roadAccess)} • {property.terrain.replace("_", " ")}
-          </span>
-          <span className="text-slate-600 block text-[11px]">
-            {property.roadSurfaceNotes}
-          </span>
-        </div>
-
-        {/* Time to Build */}
-        <div className="p-3 rounded-xl bg-brand-canvas border border-brand-border space-y-1">
-          <span className="text-slate-400 font-bold uppercase tracking-wider block text-[10px]">
-            Time Limit to Build
-          </span>
-          <span className="font-bold text-brand-forest text-sm">{property.timeToBuild}</span>
-        </div>
-
-        {/* Annual Taxes */}
-        <div className="p-3 rounded-xl bg-brand-canvas border border-brand-border space-y-1">
-          <span className="text-slate-400 font-bold uppercase tracking-wider block text-[10px]">
-            Annual Property Taxes
-          </span>
-          <span className="font-bold text-brand-ink text-sm">
-            {formatMoney(property.annualTaxes)} / year ({property.taxYear})
-          </span>
-        </div>
-
-        {/* HOA / POA */}
-        <div className="p-3 rounded-xl bg-brand-canvas border border-brand-border space-y-1">
-          <span className="text-slate-400 font-bold uppercase tracking-wider block text-[10px]">
-            HOA / POA Dues
-          </span>
-          <span className="font-bold text-brand-forest text-sm">
-            {property.hoaPoaFeeAnnual === 0 ? "$0 (No HOA)" : `${formatMoney(property.hoaPoaFeeAnnual)}/yr`}
-          </span>
-        </div>
+        {facts.map((f, i) => (
+          <div
+            key={i}
+            className={`p-3 rounded-xl bg-brand-canvas border border-brand-border space-y-1 ${
+              f.wide ? "sm:col-span-2" : ""
+            }`}
+          >
+            <span className="text-slate-400 font-bold uppercase tracking-wider block text-[10px]">
+              {f.label}
+            </span>
+            <span className="font-bold text-brand-ink text-sm block">{f.value}</span>
+            {f.hint && (
+              <span className="text-slate-500 block text-[10px]">{f.hint}</span>
+            )}
+          </div>
+        ))}
       </div>
 
-      {/* Utilities Verification Box */}
-      <div className="border border-brand-border rounded-xl p-4 bg-brand-sand-light space-y-3">
-        <h4 className="font-bold text-sm text-brand-ink flex items-center gap-2">
-          <Zap className="w-4 h-4 text-brand-forest" />
-          <span>Utilities & Off-Grid Verification</span>
-        </h4>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-          <div>
-            <span className="text-slate-500 block text-[10px]">Power:</span>
-            <span className="font-bold text-brand-ink capitalize">
-              {property.utilities.power.replace(/_/g, " ")}
-            </span>
-          </div>
-          <div>
-            <span className="text-slate-500 block text-[10px]">Water:</span>
-            <span className="font-bold text-brand-ink capitalize">
-              {property.utilities.water.replace(/_/g, " ")}
-            </span>
-          </div>
-          <div>
-            <span className="text-slate-500 block text-[10px]">Sewer:</span>
-            <span className="font-bold text-brand-ink capitalize">
-              {property.utilities.sewer.replace(/_/g, " ")}
-            </span>
-          </div>
-          <div>
-            <span className="text-slate-500 block text-[10px]">Cell Signal:</span>
-            <span className="font-bold text-brand-ink capitalize">
-              {property.utilities.cellSignal.replace(/_/g, " ")}
-            </span>
-          </div>
+      {/* Utilities — the seller's own line, quoted verbatim */}
+      {utilitySummary && (
+        <div className="border border-brand-border rounded-xl p-4 bg-brand-sand-light space-y-2">
+          <h4 className="font-bold text-sm text-brand-ink flex items-center gap-2">
+            <Zap className="w-4 h-4 text-brand-forest shrink-0" />
+            <span>Utilities</span>
+          </h4>
+          <p className="text-xs text-slate-700">{utilitySummary}</p>
+          <p className="text-[11px] text-slate-500 italic border-t border-brand-border/60 pt-2">
+            Utility availability and connection costs should be confirmed with the
+            county and local providers before purchase.
+          </p>
         </div>
-        <p className="text-[11px] text-slate-600 italic border-t border-brand-border/60 pt-2">
-          {property.utilities.notes}
-        </p>
-      </div>
+      )}
     </div>
   );
 }

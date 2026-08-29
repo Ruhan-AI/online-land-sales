@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { PROPERTIES } from "@/lib/data/properties";
+import { PROPERTIES, STATES_IN_INVENTORY } from "@/lib/data/properties";
 import { PropertyMap } from "@/components/land/PropertyMap";
 import { Compass, Sparkles, Filter, MapPin } from "lucide-react";
 import { LandProperty } from "@/types/land";
@@ -14,7 +14,7 @@ export default function MapExplorerPage() {
     if (selectedState !== "all" && p.state.toLowerCase() !== selectedState.toLowerCase()) {
       return false;
     }
-    if (has360Only && !p.panorama) {
+    if (has360Only && !p.hasStreetView) {
       return false;
     }
     return true;
@@ -44,11 +44,11 @@ export default function MapExplorerPage() {
               className="flex-1 sm:flex-none min-w-0 bg-brand-sand-light border border-brand-border rounded-xl px-3 py-2 text-brand-ink focus:outline-none focus:ring-2 focus:ring-brand-blue"
             >
               <option value="all">All States ({PROPERTIES.length})</option>
-              <option value="Arizona">Arizona</option>
-              <option value="Colorado">Colorado</option>
-              <option value="Texas">Texas</option>
-              <option value="Florida">Florida</option>
-              <option value="Nevada">Nevada</option>
+              {STATES_IN_INVENTORY.map(({ state, count }) => (
+                <option key={state} value={state}>
+                  {state} ({count})
+                </option>
+              ))}
             </select>
 
             <label className="flex shrink-0 items-center gap-1.5 cursor-pointer select-none px-2 py-2 text-slate-700">

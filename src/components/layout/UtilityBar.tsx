@@ -9,19 +9,19 @@ export function UtilityBar() {
         {/* Left trust signal & phone */}
         <div className="flex items-center gap-4 lg:gap-6 min-w-0">
           <a
-            href="tel:18005555263"
+            href="tel:15304664094"
             className="flex items-center gap-2 hover:text-brand-blue-light transition-colors font-medium whitespace-nowrap"
           >
             <Phone className="w-3.5 h-3.5 text-brand-blue shrink-0" />
-            <span>Call / Text: (800) 555-LAND</span>
+            <span>Call / Text: (530) 466-4094</span>
           </a>
           <div className="hidden xl:flex items-center gap-1.5 text-slate-400 whitespace-nowrap">
             <Clock className="w-3.5 h-3.5 shrink-0" />
-            <span>Mon–Fri 8am–6pm MST</span>
+            <span>24/7 Service</span>
           </div>
           <div className="hidden lg:flex items-center gap-1.5 text-emerald-400 font-medium whitespace-nowrap">
             <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
-            <span>90-Day 100% Satisfaction Guarantee</span>
+            <span>Money-back guarantee</span>
           </div>
         </div>
 

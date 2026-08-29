@@ -1,202 +1,150 @@
 "use client";
 
-import React, { useState } from "react";
-import { LandProperty, FinancingPlan } from "@/types/land";
+import React from "react";
+import { LandProperty } from "@/types/land";
 import { formatMoney } from "@/lib/utils";
 import { useStore } from "@/lib/store";
 import { Button } from "@/components/ui/Button";
-import { ShieldCheck, CheckCircle2, Lock, ArrowRight, Sparkles, HelpCircle } from "lucide-react";
+import { ShieldCheck, Lock, Sparkles, Gavel, ExternalLink } from "lucide-react";
 
 interface FinanceBoxProps {
   property: LandProperty;
 }
 
+/**
+ * Purchase panel.
+ *
+ * Every figure here comes from the seller's own listing: the monthly payment,
+ * down payment, total property price, rate and term. We show only what the
+ * listing states — no derived "cash discount" percentages, because the source
+ * publishes a single property price rather than separate cash/financed prices.
+ */
 export function FinanceBox({ property }: FinanceBoxProps) {
   const { addToCart } = useStore();
-  const [purchaseType, setPurchaseType] = useState<"financed" | "cash">("financed");
-  const [selectedPlanId, setSelectedPlanId] = useState<string>(property.defaultPlan.id);
+  const plan = property.defaultPlan;
 
-  const allPlans: FinancingPlan[] = [
-    property.defaultPlan,
-    ...(property.alternativePlans || []),
-  ];
-
-  const currentPlan =
-    allPlans.find((p) => p.id === selectedPlanId) || property.defaultPlan;
+  const isCashOnly = property.saleType === "cash_discount" || plan.monthlyPayment <= 0;
+  const isSold = property.status === "sold";
+  const isAuction = !!plan.isAuctionBid;
 
   const handleReserve = () => {
-    addToCart(property, currentPlan, purchaseType);
+    addToCart(property, plan, isCashOnly ? "cash" : "financed");
   };
-
-  const isSold = property.status === "sold";
 
   return (
     <div className="bg-white border-2 border-brand-forest/20 rounded-2xl p-5 sm:p-6 shadow-card space-y-5 sm:space-y-6 lg:sticky lg:top-28">
-      {/* Header Badge */}
+      {/* Header badge */}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-brand-forest bg-brand-forest-light px-3 py-1 rounded-full flex items-center gap-1.5">
-          <Sparkles className="w-3.5 h-3.5 text-brand-forest shrink-0" />
-          <span>Guaranteed Seller Financing</span>
-        </span>
-        <span className="text-xs text-brand-muted font-medium">0% Credit Check</span>
-      </div>
-
-      {/* Financed vs. Cash Switcher */}
-      <div className="grid grid-cols-2 p-1 bg-brand-sand rounded-xl border border-brand-border text-xs font-bold">
-        <button
-          onClick={() => setPurchaseType("financed")}
-          className={`py-2.5 px-2 sm:px-3 rounded-lg transition-all text-[11px] sm:text-xs ${
-            purchaseType === "financed"
-              ? "bg-brand-forest text-white shadow-sm font-extrabold"
-              : "text-slate-700 hover:text-brand-ink"
-          }`}
-        >
-          Seller Financed
-        </button>
-        <button
-          onClick={() => setPurchaseType("cash")}
-          className={`py-2.5 px-2 sm:px-3 rounded-lg transition-all text-[11px] sm:text-xs ${
-            purchaseType === "cash"
-              ? "bg-brand-ink text-white shadow-sm font-extrabold"
-              : "text-slate-700 hover:text-brand-ink"
-          }`}
-        >
-          Discounted Cash
-        </button>
-      </div>
-
-      {/* Main Economics Display */}
-      {purchaseType === "financed" ? (
-        <div className="space-y-4 animate-in fade-in duration-200">
-          {/* Monthly Payment Hero */}
-          <div className="bg-brand-forest-light/40 border border-brand-forest/20 rounded-xl p-4 text-center space-y-1">
-            <span className="text-xs font-bold text-brand-forest uppercase tracking-wider">
-              Monthly Payment
-            </span>
-            <div className="text-3xl sm:text-4xl font-extrabold text-brand-forest tracking-tight">
-              {formatMoney(currentPlan.monthlyPayment)}
-              <span className="text-base font-normal text-slate-600">/mo</span>
-            </div>
-            <p className="text-xs text-slate-600 font-medium">
-              {currentPlan.termMonths} Months @ {currentPlan.interestRate}% Fixed Interest
-            </p>
-          </div>
-
-          {/* Plan Selector Options */}
-          {allPlans.length > 1 && (
-            <div className="space-y-2">
-              <label className="block text-xs font-bold text-brand-ink uppercase tracking-wider">
-                Select Your Payment Plan:
-              </label>
-              <div className="space-y-2">
-                {allPlans.map((plan) => {
-                  const isSelected = plan.id === currentPlan.id;
-                  return (
-                    <div
-                      key={plan.id}
-                      onClick={() => setSelectedPlanId(plan.id)}
-                      className={`p-3 rounded-xl border cursor-pointer transition-all flex items-center justify-between gap-3 text-xs ${
-                        isSelected
-                          ? "border-brand-forest bg-brand-forest-light/30 shadow-sm"
-                          : "border-brand-border hover:bg-brand-sand-light"
-                      }`}
-                    >
-                      <div className="space-y-0.5 min-w-0">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="font-bold text-brand-ink">{plan.name}</span>
-                          {plan.badge && (
-                            <span className="text-[10px] bg-brand-sand text-brand-ink font-semibold px-1.5 py-0.2 rounded">
-                              {plan.badge}
-                            </span>
-                          )}
-                        </div>
-                        <span className="text-slate-500 block">
-                          {formatMoney(plan.downPayment)} down • {formatMoney(plan.monthlyPayment)}/mo ({plan.termMonths} mo)
-                        </span>
-                      </div>
-                      <div className="w-4 h-4 rounded-full border flex items-center justify-center shrink-0 border-brand-forest">
-                        {isSelected && (
-                          <div className="w-2.5 h-2.5 rounded-full bg-brand-forest" />
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+          {isAuction ? (
+            <Gavel className="w-3.5 h-3.5 shrink-0" />
+          ) : (
+            <Sparkles className="w-3.5 h-3.5 shrink-0" />
           )}
+          <span>{isCashOnly ? "Cash Purchase" : plan.name}</span>
+        </span>
+        <span className="text-xs text-brand-muted font-medium">No credit check</span>
+      </div>
 
-          {/* Detailed Fee Line Items */}
-          <div className="space-y-2 text-xs border-t border-brand-border pt-4">
-            <div className="flex flex-wrap justify-between gap-x-3 text-slate-600">
-              <span>Down Payment:</span>
-              <span className="font-semibold text-brand-ink">
-                {formatMoney(currentPlan.downPayment)}
-              </span>
-            </div>
-            <div className="flex flex-wrap justify-between gap-x-3 text-slate-600">
-              <span>One-Time Document Prep Fee:</span>
-              <span className="font-semibold text-brand-ink">
-                {formatMoney(currentPlan.docFee)}
-              </span>
-            </div>
-            <div className="flex flex-wrap justify-between gap-x-3 text-slate-600">
-              <span>Total Land Price:</span>
-              <span className="font-semibold text-brand-ink">
-                {formatMoney(currentPlan.totalFinancedPrice)}
-              </span>
-            </div>
-            <div className="flex flex-wrap justify-between gap-x-3 text-slate-600">
-              <span>Estimated Property Taxes:</span>
-              <span className="text-slate-600">
-                ~{formatMoney(currentPlan.estimatedMonthlyTax)}/mo
-              </span>
-            </div>
-
-            {/* Total Due Today */}
-            <div className="flex flex-wrap items-baseline justify-between gap-x-3 text-sm sm:text-base font-extrabold text-brand-ink pt-3 border-t border-dashed border-brand-border">
-              <span>Total Due Today to Reserve:</span>
-              <span className="text-brand-forest font-extrabold text-xl">
-                {formatMoney(currentPlan.amountDueToday)}
-              </span>
-            </div>
+      {/* Headline figure */}
+      {isCashOnly ? (
+        <div className="bg-brand-sand-light border border-brand-border rounded-xl p-4 text-center space-y-1">
+          <span className="text-xs font-bold text-brand-muted uppercase tracking-wider">
+            Property Price
+          </span>
+          <div className="text-3xl sm:text-4xl font-extrabold text-brand-ink tracking-tight">
+            {formatMoney(property.cashPrice)}
           </div>
+          <p className="text-xs text-slate-600 font-medium">
+            This parcel is offered for cash purchase.
+          </p>
         </div>
       ) : (
-        // Cash Discount View
-        <div className="space-y-4 animate-in fade-in duration-200">
-          <div className="bg-brand-sand-light border border-brand-border rounded-xl p-4 text-center space-y-1">
-            <span className="text-xs font-bold text-brand-muted uppercase tracking-wider">
-              One-Time Cash Price
-            </span>
-            <div className="text-3xl sm:text-4xl font-extrabold text-brand-ink tracking-tight">
-              {formatMoney(property.cashPrice)}
-            </div>
-            {property.cashDiscountPercentage && (
-              <span className="inline-block text-xs font-bold text-brand-forest bg-brand-forest-light px-2.5 py-0.5 rounded-full mt-1">
-                Save {property.cashDiscountPercentage}% vs Financed Price
-              </span>
-            )}
+        <div className="bg-brand-forest-light/40 border border-brand-forest/20 rounded-xl p-4 text-center space-y-1">
+          <span className="text-xs font-bold text-brand-forest uppercase tracking-wider">
+            Monthly Payment
+          </span>
+          <div className="text-3xl sm:text-4xl font-extrabold text-brand-forest tracking-tight">
+            {formatMoney(plan.monthlyPayment)}
+            <span className="text-base font-normal text-slate-600">/mo</span>
           </div>
-
-          <div className="space-y-2 text-xs border-t border-brand-border pt-4">
-            <div className="flex flex-wrap justify-between gap-x-3 text-slate-600">
-              <span>One-Time Deed Recording & Doc Fee:</span>
-              <span className="font-semibold text-brand-ink">
-                {formatMoney(property.docFee)}
-              </span>
-            </div>
-            <div className="flex flex-wrap justify-between gap-x-3 text-slate-600">
-              <span>Deed Delivery:</span>
-              <span className="font-semibold text-brand-forest">
-                Special Warranty Deed within 14 days
-              </span>
-            </div>
-          </div>
+          {(plan.termMonths || plan.interestRate) && (
+            <p className="text-xs text-slate-600 font-medium">
+              {plan.termMonths ? `${plan.termMonths} months` : null}
+              {plan.termMonths && plan.interestRate ? " @ " : null}
+              {plan.interestRate ? `${plan.interestRate}% APR` : null}
+            </p>
+          )}
         </div>
       )}
 
-      {/* Action Buttons */}
+      {/* Line items — each rendered only when the listing supplies it */}
+      <div className="space-y-2 text-xs border-t border-brand-border pt-4">
+        {!isCashOnly && !plan.isFullPayment && (
+          <div className="flex flex-wrap justify-between gap-x-3 text-slate-600">
+            <span>Down payment:</span>
+            <span className="font-semibold text-brand-ink">
+              {isAuction && plan.downPayment === 0
+                ? "Winning bid"
+                : formatMoney(plan.downPayment)}
+            </span>
+          </div>
+        )}
+
+        {property.cashPrice != null && !isCashOnly && (
+          <div className="flex flex-wrap justify-between gap-x-3 text-slate-600">
+            <span>Total property price:</span>
+            <span className="font-semibold text-brand-ink">
+              {formatMoney(property.cashPrice)}
+            </span>
+          </div>
+        )}
+
+        {plan.interestRate != null && (
+          <div className="flex flex-wrap justify-between gap-x-3 text-slate-600">
+            <span>Interest rate:</span>
+            <span className="font-semibold text-brand-ink">{plan.interestRate}% APR</span>
+          </div>
+        )}
+
+        {property.annualTaxes != null && (
+          <div className="flex flex-wrap justify-between gap-x-3 text-slate-600">
+            <span>Property taxes:</span>
+            <span className="text-slate-600">
+              {formatMoney(property.annualTaxes)} / year
+            </span>
+          </div>
+        )}
+
+        <div className="flex flex-wrap items-baseline justify-between gap-x-3 text-sm sm:text-base font-extrabold text-brand-ink pt-3 border-t border-dashed border-brand-border">
+          <span>Due at checkout:</span>
+          <span className="text-brand-forest font-extrabold text-xl">
+            {isCashOnly
+              ? formatMoney(property.cashPrice)
+              : isAuction && plan.amountDueToday === 0
+                ? "Winning bid"
+                : formatMoney(plan.amountDueToday)}
+          </span>
+        </div>
+
+        {!isCashOnly && (
+          <p className="text-[11px] text-slate-500 pt-1">
+            {plan.isFullPayment
+              ? "This parcel is listed to be paid in full at checkout."
+              : "Checkout bills the down payment only. The balance is paid monthly."}
+          </p>
+        )}
+      </div>
+
+      {/* Early payoff incentive — only when the listing states one */}
+      {property.earlyPayoffDiscountPercent != null && (
+        <div className="bg-brand-blue-light/60 rounded-xl p-3 border border-brand-blue/20 text-xs text-brand-blue-dark font-semibold">
+          {property.earlyPayoffDiscountPercent}% discount on the remaining balance
+          if you pay off early.
+        </div>
+      )}
+
+      {/* Action */}
       <div className="space-y-3">
         {isSold ? (
           <Button
@@ -205,7 +153,7 @@ export function FinanceBox({ property }: FinanceBoxProps) {
             className="w-full justify-center bg-slate-100 text-slate-500 cursor-not-allowed border-slate-300"
             disabled
           >
-            Property Sold (Join Waitlist)
+            No longer available
           </Button>
         ) : (
           <Button
@@ -215,26 +163,38 @@ export function FinanceBox({ property }: FinanceBoxProps) {
             onClick={handleReserve}
             icon={<Lock className="w-4 h-4" />}
           >
-            {purchaseType === "financed"
-              ? `Reserve for ${formatMoney(currentPlan.amountDueToday)} Today`
-              : `Buy for ${formatMoney(property.cashPrice)} Cash`}
+            {isCashOnly
+              ? `Buy for ${formatMoney(property.cashPrice)}`
+              : isAuction
+                ? "Reserve this parcel"
+                : `Reserve for ${formatMoney(plan.amountDueToday)}`}
           </Button>
         )}
 
-        <p className="text-[11px] text-center text-slate-500">
-          Instant digital contract delivery within {property.contractDeliveryHours} hours.
-        </p>
+        {property.sourceUrl && (
+          <a
+            href={property.sourceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-1.5 text-[11px] font-semibold text-brand-blue hover:underline"
+          >
+            <span>View this listing on our store</span>
+            <ExternalLink className="w-3 h-3 shrink-0" />
+          </a>
+        )}
       </div>
 
-      {/* Trust & Guarantee Box */}
+      {/* Guarantee — wording matches the seller's published terms */}
       <div className="bg-brand-sand/50 rounded-xl p-3.5 border border-brand-border/60 flex items-start gap-3">
         <ShieldCheck className="w-5 h-5 text-brand-forest shrink-0 mt-0.5" />
         <div className="text-xs space-y-0.5">
           <span className="font-bold text-brand-ink block">
-            {property.guaranteeSummary}
+            Satisfaction guarantee
           </span>
           <span className="text-slate-600 leading-relaxed block">
-            Exchange your equity or receive a full refund if you change your mind within 90 days.
+            If you are not satisfied with the property, your money back. On
+            financing agreements the refund covers principal paid, not interest
+            and fees.
           </span>
         </div>
       </div>

@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { PROPERTIES } from "@/lib/data/properties";
 import { PropertyCard } from "@/components/land/PropertyCard";
-import { Flame, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export function HotLots() {
   const hotLots = PROPERTIES.filter((p) => p.status === "available").slice(0, 3);
@@ -13,15 +13,11 @@ export function HotLots() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-clay bg-brand-clay-light px-3 py-1 rounded-full">
-              <Flame className="w-4 h-4 text-brand-clay" />
-              <span>Featured Inventory</span>
-            </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-brand-ink tracking-tight font-sans">
-              Hot Land Deals & New Arrivals
+              Parcels with a 360° tour
             </h2>
             <p className="text-sm text-brand-muted max-w-xl">
-              Hand-picked seller-financed parcels with verified road access, guaranteed monthly terms, and 360° virtual tours.
+              Parcels with a 360° Street View tour, listed newest first.
             </p>
           </div>
 

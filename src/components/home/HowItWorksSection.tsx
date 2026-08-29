@@ -32,9 +32,6 @@ export function HowItWorksSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Title */}
         <div className="text-center max-w-2xl mx-auto space-y-3">
-          <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-blue bg-brand-blue-light px-3 py-1 rounded-full">
-            <span>Simple 3-Step Process</span>
-          </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-brand-ink tracking-tight font-sans">
             How Buying Land Works
           </h2>
@@ -67,7 +64,7 @@ export function HowItWorksSection() {
 
               <div className="pt-4 border-t border-brand-border/60 text-xs font-semibold text-brand-forest flex items-center gap-1">
                 <ShieldCheck className="w-4 h-4" />
-                <span>Protected by 90-Day Guarantee</span>
+                <span>Covered by our money-back guarantee</span>
               </div>
             </div>
           ))}

@@ -10,7 +10,26 @@ interface BoundaryMapProps {
 }
 
 export function BoundaryMap({ property }: BoundaryMapProps) {
-  const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${property.coordinates.lat},${property.coordinates.lng}`;
+  const coords = property.coordinates;
+
+  // A handful of listings publish neither GPS nor a map embed.
+  if (!coords) {
+    return (
+      <div className="bg-white border border-brand-border rounded-card p-5 sm:p-6 shadow-soft">
+        <h3 className="text-lg font-bold text-brand-ink flex items-start gap-2">
+          <MapPin className="w-5 h-5 text-brand-forest shrink-0 mt-0.5" />
+          <span>Parcel Location</span>
+        </h3>
+        <p className="text-xs text-brand-muted mt-2 leading-relaxed">
+          This listing does not publish GPS coordinates. Contact the seller for
+          the exact parcel location, or look the parcel up with{" "}
+          {property.county}, {property.state}.
+        </p>
+      </div>
+    );
+  }
+
+  const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${coords.lat},${coords.lng}`;
 
   return (
     <div className="bg-white border border-brand-border rounded-card p-5 sm:p-6 shadow-soft space-y-5">
@@ -21,7 +40,7 @@ export function BoundaryMap({ property }: BoundaryMapProps) {
             <span>Interactive Parcel Map &amp; Coordinates</span>
           </h3>
           <p className="text-xs text-brand-muted mt-0.5">
-            GPS: {property.coordinates.lat.toFixed(5)}, {property.coordinates.lng.toFixed(5)}
+            GPS: {coords.lat.toFixed(5)}, {coords.lng.toFixed(5)}
           </p>
         </div>
 
@@ -43,7 +62,7 @@ export function BoundaryMap({ property }: BoundaryMapProps) {
         <PropertyMap
           properties={[property]}
           selectedPropertyId={property.id}
-          initialCenter={[property.coordinates.lat, property.coordinates.lng]}
+          initialCenter={[coords.lat, coords.lng]}
           initialZoom={14}
           className="h-full w-full"
         />
@@ -53,7 +72,10 @@ export function BoundaryMap({ property }: BoundaryMapProps) {
       <div className="flex items-start gap-2.5 p-3 rounded-xl bg-amber-50/80 border border-amber-200 text-xs text-amber-900">
         <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
         <p className="leading-relaxed">
-          <strong>Boundary Disclaimer:</strong> The green perimeter overlay is based on county GIS parcel coordinate records and is provided for preliminary visual reference only. An official licensed boundary survey is recommended to mark precise physical stakes prior to erecting permanent structures or fencing.
+          <strong>Location Disclaimer:</strong> The pin marks the coordinates
+          published with this listing and indicates the general parcel location,
+          not a surveyed boundary. Commission a licensed boundary survey to
+          establish exact corners before fencing or building.
         </p>
       </div>
     </div>

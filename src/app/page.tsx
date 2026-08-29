@@ -6,7 +6,6 @@ import { MapDiscoveryPreview } from "@/components/home/MapDiscoveryPreview";
 import { HowItWorksSection } from "@/components/home/HowItWorksSection";
 import { GoalGrid } from "@/components/home/GoalGrid";
 import { FinanceCalculatorSection } from "@/components/home/FinanceCalculatorSection";
-import { Testimonials } from "@/components/home/Testimonials";
 import { LearnHighlights } from "@/components/home/LearnHighlights";
 
 export default function HomePage() {
@@ -32,9 +31,6 @@ export default function HomePage() {
 
       {/* 8. Budget-First Financing Calculator */}
       <FinanceCalculatorSection />
-
-      {/* 9. Verified Buyer Reviews */}
-      <Testimonials />
 
       {/* 10. Educational Learning Center Guides */}
       <LearnHighlights />

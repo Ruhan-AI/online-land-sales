@@ -39,14 +39,11 @@ export function GoalGrid() {
     <section className="py-12 sm:py-16 lg:py-24 bg-brand-canvas">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="text-center max-w-2xl mx-auto space-y-3">
-          <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-clay bg-brand-clay-light px-3 py-1 rounded-full">
-            <span>Find Your Purpose</span>
-          </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-brand-ink tracking-tight font-sans">
             Shop Land by Your Goal
           </h2>
           <p className="text-sm text-slate-600">
-            Whether you want a self-sustaining ranch, a mountain cabin site, or a long-term asset, find the parcel built for your dreams.
+            Browse by what you plan to do with the land.
           </p>
         </div>
 

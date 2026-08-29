@@ -1,88 +1,45 @@
 import React from "react";
 import Link from "next/link";
-import { Compass, ShieldCheck, Phone, Mail, MapPin, ArrowUpRight } from "lucide-react";
+import Image from "next/image";
+import { Phone, Mail, ArrowUpRight } from "lucide-react";
+import { STATES_IN_INVENTORY } from "@/lib/data/properties";
 
 export function Footer() {
   return (
     <footer className="bg-brand-ink text-white/90 pt-12 sm:pt-16 pb-10 sm:pb-12 border-t border-brand-border/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Top Trust Section */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 pb-10 sm:pb-12 border-b border-white/10">
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-brand-forest/20 flex items-center justify-center shrink-0 border border-brand-forest/30">
-              <Compass className="w-6 h-6 text-emerald-400" />
-            </div>
-            <div>
-              <h4 className="font-bold text-white text-base">Founded in 2004</h4>
-              <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                Over two decades of trusted direct land sales with 55,000+ acres successfully transferred to American families.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-brand-blue/20 flex items-center justify-center shrink-0 border border-brand-blue/30">
-              <ShieldCheck className="w-6 h-6 text-brand-blue-light" />
-            </div>
-            <div>
-              <h4 className="font-bold text-white text-base">100% Guaranteed Financing</h4>
-              <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                Zero bank qualifying, zero credit checks, and zero prepayment penalties. Everyone qualifies.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center shrink-0 border border-amber-500/30">
-              <ShieldCheck className="w-6 h-6 text-amber-400" />
-            </div>
-            <div>
-              <h4 className="font-bold text-white text-base">90-Day Money-Back</h4>
-              <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                Visit your property in person with 100% peace of mind. Exchange or refund if it’s not the perfect fit.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-brand-sand/10 flex items-center justify-center shrink-0 border border-white/10">
-              <Phone className="w-6 h-6 text-brand-sand" />
-            </div>
-            <div>
-              <h4 className="font-bold text-white text-base">Direct Human Support</h4>
-              <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                Speak directly with real land specialists who know the terrain, coordinates, and county regulations.
-              </p>
-            </div>
-          </div>
-        </div>
-
         {/* Middle Navigation Columns */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 py-10 sm:py-12 border-b border-white/10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 pb-10 sm:pb-12 border-b border-white/10">
           {/* Brand & Contact */}
           <div className="sm:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-brand-forest flex items-center justify-center text-white">
-                <Compass className="w-5 h-5" />
-              </div>
+              <Image
+                src="/brand/ols-mark.png"
+                alt=""
+                aria-hidden="true"
+                width={512}
+                height={512}
+                className="w-10 h-10 shrink-0 rounded-lg object-contain"
+              />
               <span className="font-extrabold text-lg text-white tracking-tight">
-                Online Land Sales
+                Online Land Sales, LLC
               </span>
             </div>
             <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
-              Making American land ownership affordable, transparent, and accessible to everyone through guaranteed direct seller financing.
+              Selling U.S. land direct to buyers since 2004, with owner financing
+              handled in-house.
             </p>
             <div className="space-y-2 text-xs text-slate-300 pt-2">
               <p className="flex items-start gap-2">
                 <Phone className="w-4 h-4 text-brand-blue shrink-0" />
-                <a href="tel:18005555263" className="hover:text-white font-medium">
-                  (800) 555-LAND / (800) 555-5263
+                <a href="tel:15304664094" className="hover:text-white font-medium">
+                  (530) 466-4094
                 </a>
               </p>
               <p className="flex items-start gap-2">
                 <Mail className="w-4 h-4 text-brand-blue shrink-0" />
-                <a href="mailto:support@onlinelandsales.com" className="hover:text-white break-all">
-                  support@onlinelandsales.com
+                <a href="mailto:service@onlinelandsales.com" className="hover:text-white break-all">
+                  service@onlinelandsales.com
                 </a>
               </p>
             </div>
@@ -114,7 +71,7 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/guarantee" className="block py-1.5 hover:text-white transition-colors">
-                  90-Day Guarantee
+                  Our Guarantee
                 </Link>
               </li>
               <li>
@@ -128,32 +85,19 @@ export function Footer() {
           {/* By State */}
           <div className="space-y-3">
             <h5 className="font-bold text-sm text-white tracking-wider uppercase">Top States</h5>
+            {/* Driven by real inventory so we never link to an empty state */}
             <ul className="space-y-1 text-xs text-slate-400">
-              <li>
-                <Link href="/land?state=Arizona" className="block py-1.5 hover:text-white transition-colors">
-                  Arizona Land For Sale
-                </Link>
-              </li>
-              <li>
-                <Link href="/land?state=Colorado" className="block py-1.5 hover:text-white transition-colors">
-                  Colorado Mountain Lots
-                </Link>
-              </li>
-              <li>
-                <Link href="/land?state=Texas" className="block py-1.5 hover:text-white transition-colors">
-                  Texas Desert Acreage
-                </Link>
-              </li>
-              <li>
-                <Link href="/land?state=Florida" className="block py-1.5 hover:text-white transition-colors">
-                  Florida Lake Parcels
-                </Link>
-              </li>
-              <li>
-                <Link href="/land?state=Nevada" className="block py-1.5 hover:text-white transition-colors">
-                  Nevada High Desert
-                </Link>
-              </li>
+              {STATES_IN_INVENTORY.slice(0, 6).map(({ state, count }) => (
+                <li key={state}>
+                  <Link
+                    href={`/land?state=${encodeURIComponent(state)}`}
+                    className="flex items-center justify-between gap-2 py-1.5 hover:text-white transition-colors"
+                  >
+                    <span>{state} Land</span>
+                    <span className="text-[10px] text-slate-500">{count}</span>
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

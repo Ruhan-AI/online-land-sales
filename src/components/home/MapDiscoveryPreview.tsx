@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { PROPERTIES } from "@/lib/data/properties";
 import { PropertyMap } from "@/components/land/PropertyMap";
-import { Compass, Sparkles, ArrowRight, MapPin } from "lucide-react";
+import { Compass } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
 export function MapDiscoveryPreview() {
@@ -12,10 +12,6 @@ export function MapDiscoveryPreview() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-forest bg-brand-forest-light px-3 py-1 rounded-full">
-              <Compass className="w-4 h-4 text-brand-forest" />
-              <span>Interactive Discovery</span>
-            </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-brand-ink tracking-tight font-sans">
               Explore Land Across the United States
             </h2>

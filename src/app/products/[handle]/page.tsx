@@ -2,6 +2,7 @@ import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { PROPERTIES } from "@/lib/data/properties";
+import { getFullListing } from "@/lib/data/listings.server";
 import { PropertyGallery } from "@/components/land/PropertyGallery";
 import { FinanceBox } from "@/components/land/FinanceBox";
 import { QuickFacts } from "@/components/land/QuickFacts";
@@ -37,7 +38,7 @@ interface ProductPageProps {
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { handle } = await params;
-  const property = PROPERTIES.find((p) => p.handle === handle);
+  const property = getFullListing(handle);
 
   if (!property) {
     notFound();
@@ -110,17 +111,19 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 className={`text-xs font-bold px-3 py-1 rounded-full border shadow-sm ${statusBadge.bg} ${statusBadge.color}`}
               >
                 {statusBadge.label}
-              </span>
-              {property.isHotLot && (
-                <span className="text-xs font-bold px-3 py-1 rounded-full bg-brand-clay text-white">
-                  🔥 High Demand
+              </span>              {property.apn && (
+                <span className="text-xs font-bold text-brand-blue bg-brand-blue-light px-2.5 py-1 rounded-md">
+                  APN: {property.apn}
                 </span>
               )}
-              <span className="text-xs font-bold text-brand-blue bg-brand-blue-light px-2.5 py-1 rounded-md">
-                APN: {property.apn}
-              </span>
+              {property.panorama?.streetView && (
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-brand-forest bg-brand-forest-light px-2.5 py-1 rounded-md">
+                  <Sparkles className="w-3 h-3 shrink-0" />
+                  360° Street View
+                </span>
+              )}
               <span className="text-xs font-bold text-slate-500 font-mono">
-                Code: {property.propertyCode}
+                {property.propertyCode}
               </span>
             </div>
 
@@ -131,7 +134,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <div className="flex items-start gap-2 text-xs text-brand-muted font-medium">
               <MapPin className="w-4 h-4 text-brand-blue shrink-0 mt-px" />
               <span>
-                {property.county}, {property.state} • {property.nearestTown} ({property.distanceToTownMiles} miles)
+                {property.county}, {property.state}
+                {property.nearestTown ? ` • Near ${property.nearestTown}` : ""}
               </span>
             </div>
           </div>
@@ -154,17 +158,17 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 About This Property
               </h2>
               <p className="text-sm text-slate-700 leading-relaxed">
-                {property.fullDescription}
+                {property.fullDescription || property.shortSummary}
               </p>
 
               {/* Nearby Highlights */}
-              {property.nearbyHighlights.length > 0 && (
+              {(property.nearbyHighlights?.length ?? 0) > 0 && (
                 <div className="pt-4 border-t border-brand-border/60 space-y-3">
                   <h3 className="font-bold text-xs text-brand-ink uppercase tracking-wider">
                     Nearby Attractions & Outdoor Recreation:
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                    {property.nearbyHighlights.map((h, i) => (
+                    {property.nearbyHighlights!.map((h, i) => (
                       <div key={i} className="p-3 rounded-xl bg-brand-sand-light border border-brand-border/60 space-y-1">
                         <span className="font-bold text-brand-ink block">
                           {h.name} ({h.distanceMiles} miles)
@@ -189,13 +193,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <BoundaryMap property={property} />
 
             {/* 6. Frequently Asked Questions */}
-            {property.faqs.length > 0 && (
+            {(property.faqs?.length ?? 0) > 0 && (
               <div className="bg-white border border-brand-border rounded-card p-5 sm:p-8 shadow-soft space-y-6">
                 <h3 className="text-lg sm:text-xl font-bold text-brand-ink">
                   Frequently Asked Questions About This Lot
                 </h3>
                 <Accordion
-                  items={property.faqs.map((faq, i) => ({
+                  items={property.faqs!.map((faq, i) => ({
                     id: `faq-${i}`,
                     title: faq.question,
                     content: <p>{faq.answer}</p>,

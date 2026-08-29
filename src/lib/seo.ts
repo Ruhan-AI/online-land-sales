@@ -59,9 +59,9 @@ export function generateOrganizationSchema() {
     name: "Online Land Sales",
     url: "https://onlinelandsales.com",
     logo: "https://onlinelandsales.com/logo.png",
-    description: "Affordable U.S. vacant land with guaranteed seller financing, no credit checks, and 90-day money-back guarantee.",
+    description: "Owner financed U.S. land, sold direct since 2004. No credit check and fixed monthly payments.",
     foundingDate: "2004",
-    telephone: "+1-800-555-LAND",
+    telephone: "+1-530-466-4094",
     address: {
       "@type": "PostalAddress",
       addressCountry: "US",

@@ -23,9 +23,6 @@ export default function HowItWorksPage() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 sm:space-y-16">
         {/* Page Header */}
         <div className="text-center max-w-2xl mx-auto space-y-4">
-          <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-blue bg-brand-blue-light px-3 py-1 rounded-full">
-            <span>Direct Land Ownership</span>
-          </div>
           <h1 className="text-[1.75rem] leading-tight xs:text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-ink tracking-tight font-sans">
             How Buying Land Works
           </h1>
@@ -76,21 +73,18 @@ export default function HowItWorksPage() {
         {/* Guaranteed Seller Financing Breakdown */}
         <div className="bg-gradient-to-br from-brand-ink via-brand-charcoal to-brand-ink text-white rounded-3xl p-6 sm:p-10 lg:p-12 shadow-2xl border border-white/10 space-y-6 sm:space-y-8">
           <div className="max-w-2xl space-y-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-300 bg-brand-forest/40 px-3 py-1 rounded-full">
-              Zero Credit Checks
-            </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
-              Why We Can Guarantee Your Financing
+              Why we can finance it ourselves
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              Traditional banks rarely lend money for vacant, raw land. Because Online Land Sales is the direct property owner, we can act as the lender and offer fixed, affordable financing to every buyer regardless of credit history.
+              Banks rarely lend against vacant, raw land. We own the parcels outright, so we act as the lender ourselves — which is why there is no bank application and no credit check.
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div className="flex items-center gap-3 p-4 rounded-xl bg-white/10 border border-white/10">
               <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
-              <span>100% Guaranteed Approval (No Credit Bureau Inquiries)</span>
+              <span>No credit bureau inquiries</span>
             </div>
             <div className="flex items-center gap-3 p-4 rounded-xl bg-white/10 border border-white/10">
               <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />

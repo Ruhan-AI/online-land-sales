@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { PROPERTIES } from "@/lib/data/properties";
 import { formatMoney, calculateMonthlyPayment } from "@/lib/utils";
-import { Calculator, ShieldCheck, CheckCircle2, DollarSign, ArrowRight, FileText } from "lucide-react";
+import { Calculator } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
 export default function FinancingPage() {
@@ -21,15 +21,12 @@ export default function FinancingPage() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 sm:space-y-16">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-4">
-          <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-forest bg-brand-forest-light px-3 py-1 rounded-full">
-            <ShieldCheck className="w-4 h-4 text-brand-forest" />
-            <span>Guaranteed Seller Financing</span>
-          </div>
           <h1 className="text-[1.75rem] leading-tight xs:text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-ink tracking-tight font-sans">
             Simple, Transparent Land Financing
           </h1>
           <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-            Own prime American land without bank loans or credit checks. Customize your terms below to fit your family's budget.
+            We finance our own parcels, so there is no bank and no credit check.
+            Adjust the terms below to estimate a monthly payment.
           </p>
         </div>
 

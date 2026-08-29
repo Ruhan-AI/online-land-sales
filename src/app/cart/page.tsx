@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useStore } from "@/lib/store";
-import { formatMoney, formatAcres } from "@/lib/utils";
+import { formatMoney, formatAcres, imageOf } from "@/lib/utils";
 import { createShopifyCheckout } from "@/lib/shopify";
 import { Button } from "@/components/ui/Button";
 import { Trash2, ShieldCheck, Lock, CheckCircle2, ArrowRight } from "lucide-react";
@@ -44,7 +44,7 @@ export default function CartPage() {
             </div>
             <h3 className="text-xl font-bold text-brand-ink">Your cart is currently empty</h3>
             <p className="text-xs sm:text-sm text-brand-muted max-w-sm mx-auto">
-              You have not selected any parcels yet. Explore our active inventory of seller-financed land with guaranteed approval.
+              You have not selected any parcels yet. Browse the parcels we currently have available.
             </p>
             <Link href="/land">
               <Button variant="forest" size="lg" className="shadow-md font-bold mt-2">
@@ -59,7 +59,7 @@ export default function CartPage() {
               <div className="flex gap-3 sm:gap-4">
                 <div className="relative w-20 h-20 sm:w-28 sm:h-28 rounded-2xl overflow-hidden shrink-0 border border-brand-border">
                   <Image
-                    src={item.property.primaryImage}
+                    src={imageOf(item.property.primaryImage)}
                     alt={item.property.title}
                     fill
                     className="object-cover"
@@ -140,10 +140,10 @@ export default function CartPage() {
               <div className="bg-brand-sand/50 rounded-2xl p-4 space-y-2 text-xs text-slate-700">
                 <div className="flex items-center gap-2 font-bold text-brand-ink">
                   <ShieldCheck className="w-4 h-4 text-brand-forest" />
-                  <span>90-Day Money-Back Guarantee</span>
+                  <span>Money-back guarantee</span>
                 </div>
                 <p className="text-[11px] leading-relaxed text-slate-600">
-                  Full refund or 100% equity exchange if you change your mind within 90 days.
+                  If you are not satisfied with the property, your money back. On financing agreements the refund covers principal paid, not interest and fees.
                 </p>
               </div>
 

@@ -63,9 +63,11 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   }, [cart]);
 
   const addToCart = (property: LandProperty, plan: FinancingPlan, purchaseType: "financed" | "cash") => {
-    const dueToday = purchaseType === "cash" 
-      ? property.cashPrice 
-      : plan.amountDueToday;
+    // Cash listings may not publish a price; fall back to the plan amount.
+    const dueToday =
+      purchaseType === "cash"
+        ? (property.cashPrice ?? plan.amountDueToday)
+        : plan.amountDueToday;
 
     const newItem: CartItem = {
       property,

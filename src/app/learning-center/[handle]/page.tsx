@@ -80,7 +80,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         <div className="bg-gradient-to-br from-brand-ink to-brand-charcoal text-white rounded-3xl p-6 sm:p-10 shadow-2xl border border-white/10 text-center space-y-4">
           <h3 className="text-xl sm:text-2xl font-bold">Ready to Start Your Land Journey?</h3>
           <p className="text-xs sm:text-sm text-slate-300 max-w-md mx-auto">
-            Browse our current active inventory of seller-financed land with guaranteed approval and 90-day money-back guarantee.
+            Browse the parcels we currently have available.
           </p>
           <Link href="/land" className="inline-block pt-2">
             <Button variant="forest" size="lg" icon={<ArrowRight className="w-4 h-4" />} iconPosition="right">
