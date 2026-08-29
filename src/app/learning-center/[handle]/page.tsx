@@ -1,10 +1,8 @@
 import React from "react";
 import { notFound } from "next/navigation";
-import Link from "next/link";
-import Image from "next/image";
-import { ARTICLES } from "@/lib/data/articles";
-import { Clock, ChevronLeft, ArrowRight, ShieldCheck, Share2 } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import { Metadata } from "next";
+import { ARTICLES, Article } from "@/lib/data/articles";
+import { ArticleViewer } from "@/components/blog/ArticleViewer";
 
 export async function generateStaticParams() {
   return ARTICLES.map((art) => ({
@@ -16,6 +14,63 @@ interface ArticlePageProps {
   params: Promise<{ handle: string }>;
 }
 
+export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
+  const { handle } = await params;
+  const article = ARTICLES.find((a) => a.slug === handle);
+
+  if (!article) {
+    return {
+      title: "Article Not Found | Online Land Sales",
+      description: "The requested land buying guide could not be found.",
+    };
+  }
+
+  const title = article.seoTitle || `${article.title} | Online Land Sales`;
+  const description = article.summary;
+
+  return {
+    title,
+    description,
+    keywords: [
+      "how seller financing land works",
+      "owner financed land",
+      "seller financing vacant land",
+      "buy land with seller financing",
+      "land contract vs deed of trust",
+      "owner financing land no credit check",
+      "promissory note for land",
+      "buying land without bank",
+      "online land sales"
+    ],
+    authors: [{ name: article.author?.name || "Online Land Sales Team" }],
+    openGraph: {
+      title,
+      description,
+      type: "article",
+      publishedTime: article.date,
+      modifiedTime: article.lastUpdated || article.date,
+      authors: [article.author?.name || "Online Land Sales"],
+      images: [
+        {
+          url: article.coverImage,
+          width: 1200,
+          height: 630,
+          alt: article.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [article.coverImage],
+    },
+    alternates: {
+      canonical: `https://onlinelandsales.com/learning-center/${article.slug}`,
+    },
+  };
+}
+
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { handle } = await params;
   const article = ARTICLES.find((a) => a.slug === handle);
@@ -24,71 +79,96 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound();
   }
 
+  const relatedArticles = ARTICLES.filter((a) => a.slug !== handle).slice(0, 3);
+
+  // Schema.org Article Structured Data
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    description: article.summary,
+    image: [article.coverImage],
+    datePublished: article.date,
+    dateModified: article.lastUpdated || article.date,
+    author: {
+      "@type": "Organization",
+      name: article.author?.name || "Online Land Sales",
+      url: "https://onlinelandsales.com"
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Online Land Sales",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://onlinelandsales.com/logo.png"
+      }
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://onlinelandsales.com/learning-center/${article.slug}`
+    }
+  };
+
+  // Schema.org FAQPage Structured Data (if FAQs exist)
+  const faqSchema = article.faqs && article.faqs.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: article.faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer
+      }
+    }))
+  } : null;
+
+  // Schema.org Breadcrumbs
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://onlinelandsales.com"
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Learning Center",
+        item: "https://onlinelandsales.com/learning-center"
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: article.title,
+        item: `https://onlinelandsales.com/learning-center/${article.slug}`
+      }
+    ]
+  };
+
   return (
-    <div className="bg-brand-canvas min-h-screen py-8 sm:py-16">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-10">
-        {/* Back link */}
-        <div>
-          <Link
-            href="/learning-center"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-muted hover:text-brand-ink transition-colors"
-          >
-            <ChevronLeft className="w-4 h-4" />
-            <span>Back to All Learning Guides</span>
-          </Link>
-        </div>
+    <>
+      {/* Inject Structured Data for SEO Rich Snippets */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
 
-        {/* Header */}
-        <div className="space-y-4">
-          <span className="inline-block bg-brand-sand text-brand-ink text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-            {article.category}
-          </span>
-          <h1 className="text-[1.75rem] leading-tight xs:text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-ink tracking-tight font-sans">
-            {article.title}
-          </h1>
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500 font-medium">
-            <span className="flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5" />
-              {article.readTime}
-            </span>
-            <span>•</span>
-            <span>Published {article.date}</span>
-            <span>•</span>
-            <span>By Online Land Sales Editorial Team</span>
-          </div>
-        </div>
-
-        {/* Cover Photo */}
-        <div className="relative aspect-[16/9] w-full rounded-3xl overflow-hidden shadow-card border border-brand-border">
-          <Image
-            src={article.coverImage}
-            alt={article.title}
-            fill
-            priority
-            className="object-cover"
-          />
-        </div>
-
-        {/* Article Markdown Body */}
-        <div className="bg-white rounded-3xl p-5 sm:p-8 lg:p-10 border border-brand-border shadow-soft prose prose-slate max-w-none text-slate-700 leading-relaxed text-sm sm:text-base space-y-6">
-          <div className="whitespace-pre-line leading-relaxed">
-            {article.content}
-          </div>
-        </div>
-
-        {/* Call to action at bottom */}
-        <div className="bg-gradient-to-br from-brand-ink to-brand-charcoal text-white rounded-3xl p-6 sm:p-10 shadow-2xl border border-white/10 text-center space-y-4">
-          <h3 className="text-xl sm:text-2xl font-bold">Ready to Start Your Land Journey?</h3>
-          <p className="text-xs sm:text-sm text-slate-300 max-w-md mx-auto">
-            Browse the parcels we currently have available.
-          </p>
-          <Link href="/land" className="inline-block pt-2">
-            <Button variant="forest" size="lg" icon={<ArrowRight className="w-4 h-4" />} iconPosition="right">
-              View Available Properties
-            </Button>
-          </Link>
-        </div>
-      </div>
-    </div>
+      {/* Main Blog Article Viewer */}
+      <ArticleViewer article={article} relatedArticles={relatedArticles} />
+    </>
   );
 }
