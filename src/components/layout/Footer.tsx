@@ -1,8 +1,8 @@
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { Phone, Mail, ArrowUpRight } from "lucide-react";
 import { STATES_IN_INVENTORY } from "@/lib/data/properties";
+import { BrandMark } from "@/components/brand/BrandMark";
 
 export function Footer() {
   return (
@@ -13,14 +13,7 @@ export function Footer() {
           {/* Brand & Contact */}
           <div className="sm:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <Image
-                src="/brand/ols-mark.png"
-                alt=""
-                aria-hidden="true"
-                width={512}
-                height={512}
-                className="w-10 h-10 shrink-0 rounded-lg object-contain"
-              />
+              <BrandMark className="w-10 h-10 shrink-0 rounded-lg" />
               <span className="font-extrabold text-lg text-white tracking-tight">
                 Online Land Sales, LLC
               </span>

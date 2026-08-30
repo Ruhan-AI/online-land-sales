@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { BrandMark } from "@/components/brand/BrandMark";
 import {
   Compass,
   Heart,
@@ -57,15 +58,7 @@ export function Header() {
             className="flex items-center gap-2 sm:gap-3 group min-w-0 lg:shrink-0"
             aria-label="Online Land Sales — home"
           >
-            <Image
-              src="/brand/ols-mark.png"
-              alt=""
-              aria-hidden="true"
-              width={512}
-              height={512}
-              priority
-              className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl border border-brand-border object-contain shadow-sm group-hover:scale-105 transition-transform"
-            />
+            <BrandMark className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl border border-brand-border shadow-sm group-hover:scale-105 transition-transform" />
             <div className="flex flex-col min-w-0">
               <div className="flex items-center gap-1.5 min-w-0">
                 <span className="font-extrabold text-base sm:text-lg lg:text-xl leading-tight tracking-tight text-brand-ink font-sans truncate lg:overflow-visible lg:whitespace-nowrap">
