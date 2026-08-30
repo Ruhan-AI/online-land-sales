@@ -60,8 +60,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
   ];
 
   return (
-    // Bottom padding clears the fixed mobile reserve bar (hidden from lg up)
-    <div className="bg-brand-canvas min-h-screen py-6 sm:py-10 pb-32 lg:pb-10">
+    // Bottom padding clears the fixed mobile reserve bar (hidden from lg up).
+    // Top padding is set with `pt-*`, never `py-*`: Tailwind emits responsive
+    // utilities after unprefixed ones, so a `sm:py-10` would win over `pb-32`
+    // from 640px up and silently drop the clearance to 40px on tablets.
+    <div className="bg-brand-canvas min-h-screen pt-6 sm:pt-10 pb-32 lg:pb-10">
       {/* Inject JSON-LD Structured Data */}
       <script
         type="application/ld+json"

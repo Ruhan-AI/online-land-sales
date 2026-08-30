@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { LandProperty } from "@/types/land";
 import { useStore } from "@/lib/store";
 import { formatMoney } from "@/lib/utils";
@@ -12,6 +12,16 @@ interface MobileStickyReserveBarProps {
 
 export function MobileStickyReserveBar({ property }: MobileStickyReserveBarProps) {
   const { addToCart, setIsCartOpen } = useStore();
+
+  // The <footer> is a sibling of <main>, so this page's own bottom padding
+  // cannot clear a bar that floats over the whole viewport — the footer's last
+  // rows (copyright, Terms, Privacy, Financing Disclosures) end up permanently
+  // underneath it. Flag the document so the footer can reserve matching room;
+  // see the `[data-sticky-bar]` rule in globals.css.
+  useEffect(() => {
+    document.documentElement.setAttribute("data-sticky-bar", "");
+    return () => document.documentElement.removeAttribute("data-sticky-bar");
+  }, []);
 
   const handleReserve = () => {
     addToCart(property, property.defaultPlan, "financed");

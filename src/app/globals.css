@@ -45,19 +45,39 @@
 }
 
 /*
- * iOS Safari auto-zooms whenever a focused form control renders below 16px.
- * The design uses 12px controls, so bump them up on phones only — desktop keeps
- * the compact sizing.
+ * iOS Safari auto-zooms whenever a focused form control renders below 16px, and
+ * it never zooms back out. The design uses 12–14px controls, so bump them up.
+ *
+ * The cap is 1024px, not 767px: iPadOS Safari has exactly the same zoom
+ * behaviour as the iPhone, and every iPad viewport (768 portrait, 820 Air,
+ * 1024 landscape) sits above a phone-only breakpoint. Desktop keeps the
+ * compact sizing.
  *
  * The `:not([hidden])` is a specificity bump, not a filter: Tailwind v3 compiles
  * `@layer` away into plain CSS, so a bare `select` (0,0,1) would lose to the
  * `.text-xs` (0,1,0) utility these controls carry. (0,1,1) wins instead.
  */
-@media (max-width: 767px) {
+@media (max-width: 1024px) {
   input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
   select:not([hidden]),
   textarea:not([hidden]) {
     font-size: 16px;
+  }
+}
+
+/*
+ * Pages that render a fixed bottom bar (the product page's reserve bar) set
+ * `data-sticky-bar` on <html>. The bar overlays the viewport and the <footer>
+ * lives outside <main>, so no page-level padding can clear it — the footer
+ * reserves the room itself instead.
+ *
+ * Capped at 1023px because the bar is `lg:hidden`; the measured bar is 73–77px
+ * tall, so 5.5rem leaves headroom on top of the notch inset. The attribute adds
+ * (0,1,1) specificity, which beats the footer's own `.sm:pb-12` (0,1,0).
+ */
+@media (max-width: 1023px) {
+  [data-sticky-bar] footer {
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
   }
 }
 
